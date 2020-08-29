@@ -129,7 +129,6 @@ class Canvas:
         y += self.center_y
         try:
             im = self.__pack()
-            #im.save('/home/vafa/Documents/Python/Chaos Game/pic.png')
             rgb_im = im.convert('RGB')
             r, g, b = rgb_im.getpixel((x, y))
             return (r, g, b)
