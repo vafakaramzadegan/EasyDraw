@@ -17,7 +17,7 @@ First, import the library:
 import EasyDraw as ed
 ```
 
-Then, you need to declare twofunctions:
+Then, you need to declare two functions:
 
 ```python
 def setup(app):
