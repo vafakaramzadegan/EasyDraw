@@ -27,7 +27,7 @@ def setup(app):
     # move canvas center position
     app.canvas.translate(400, 400)
     # set fill value to a random color
-    app.canvas.fill(window.color.random())
+    app.canvas.fill(app.color.random())
     # set stroke color to black
     app.canvas.stroke('black')
     # set stroke width
@@ -53,13 +53,11 @@ def draw(app):
     
     # you can build custom shapes:
     app.canvas.begin_shape()
-    window.canvas.vertex(0, 0)
-    window.canvas.vertex(100, 100)
-    window.canvas.vertex(0, 100)
-    window.canvas.vertex(0, 0)
+    app.canvas.vertex(0, 0)
+    app.canvas.vertex(100, 100)
+    app.canvas.vertex(0, 100)
+    app.canvas.vertex(0, 0)
     app.canvas.end_shape()
-    
-
 ```
 
 after defining the above functions, you should call EasyDraw class:
