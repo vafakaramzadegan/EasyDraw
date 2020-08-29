@@ -59,7 +59,7 @@ def draw(app):
     app.canvas.end_shape()
 ```
 
-after declaringg the functions, create an instance of EasyDraw class:
+after declaring the functions, create an instance of EasyDraw class:
 
 ```python
 ed.EasyDraw(width = 800, # width of the canvas
