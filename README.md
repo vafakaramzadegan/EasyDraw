@@ -1,5 +1,5 @@
 # EasyDraw
-A graphical library build for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
+A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
 
 
 ## Installation
@@ -21,9 +21,8 @@ now you need two functions:
 
 ```python
 def setup(app):
-    ''' write your setup codes
-        only executed once on app launch
-        sample codes: '''
+    ''' write your setup codes here. 
+        This function only executed once when app launches. '''
     # move canvas center position
     app.canvas.translate(400, 400)
     # set fill value to a random color
@@ -35,7 +34,7 @@ def setup(app):
     
 def draw(app):
     ''' codes written in this function are executed
-        repeatedly in each frame, which allows you to 
+        in each frame. This allows you to 
         create animations. '''
     # draw a rectangle
     app.canvas.rect(0, 0, 100, 100)
@@ -60,7 +59,7 @@ def draw(app):
     app.canvas.end_shape()
 ```
 
-after defining the above functions, you should call EasyDraw class:
+after defining the above functions, you should create an instance of EasyDraw class:
 
 ```python
 ed.EasyDraw(width = 800, # width of the canvas
