@@ -17,7 +17,7 @@ First, import the library:
 import EasyDraw as ed
 ```
 
-Then, you need to declare two functions:
+Then, you need to simply declare two functions:
 
 ```python
 def setup(app):
@@ -59,7 +59,7 @@ def draw(app):
     app.canvas.end_shape()
 ```
 
-after defining the above functions, you should create an instance of EasyDraw class:
+after declaringg the functions, create an instance of EasyDraw class:
 
 ```python
 ed.EasyDraw(width = 800, # width of the canvas
