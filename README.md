@@ -21,13 +21,44 @@ now you need two functions:
 
 ```python
 def setup(app):
-    # write your setup codes
-    # only executed once on app launch
+    ''' write your setup codes
+        only executed once on app launch
+        sample codes: '''
+    # move canvas center position
+    app.canvas.translate(400, 400)
+    # set fill value to a random color
+    app.canvas.fill(window.color.random())
+    # set stroke color to black
+    app.canvas.stroke('black')
+    # set stroke width
+    app.canvas.stroke_width(2)
     
 def draw(app):
-    # codes written in this function are executed
-    # repeatedly in each frame, which allows you to 
-    # create animations.
+    ''' codes written in this function are executed
+        repeatedly in each frame, which allows you to 
+        create animations. '''
+    # draw a rectangle
+    app.canvas.rect(0, 0, 100, 100)
+    # draw a circle
+    app.canvas.circle(0, 0, 100)
+    # rotate canvas
+    app.canvas.rotate(90)
+    # set a pixel value
+    # RGB
+    app.canvas.point(50, 50, app.color.rgb(255, 0, 0))
+    # HSV
+    app.canvas.point(50, 50, app.color.hsv(100, 255, 255))
+    # HEX
+    app.canvas.point(50, 50, '#ffffff')
+    
+    # you can build custom shapes:
+    app.canvas.begin_shape()
+    window.canvas.vertex(0, 0)
+    window.canvas.vertex(100, 100)
+    window.canvas.vertex(0, 100)
+    window.canvas.vertex(0, 0)
+    app.canvas.end_shape()
+    
 
 ```
 
