@@ -17,12 +17,12 @@ First, import the library:
 import EasyDraw as ed
 ```
 
-Then, you need to simply declare two functions:
+Then, you simply need to declare two functions:
 
 ```python
 def setup(app):
     ''' write your setup codes here. 
-        This function only executed once when app launches. '''
+        This function only executes once on app launch. '''
     # move canvas center position
     app.canvas.translate(400, 400)
     # set fill value to a random color
