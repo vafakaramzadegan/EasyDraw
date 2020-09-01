@@ -1,6 +1,12 @@
 # EasyDraw
 A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
 
+## Prerequisites
+EasyDraw requires Pillow to be installed. this can be done using:
+
+`python3 -m pip install pillow`
+
+for more information, read the instructions [here!](https://pillow.readthedocs.io/en/stable/installation.html)
 
 ## Installation
 EasyDraw can be installed with **pip**:
@@ -65,7 +71,8 @@ after declaring the functions, create an instance of EasyDraw class:
 ed.EasyDraw(width = 800, # width of the canvas
         height = 800, # height of the canvas
         fps = 30, # frames per second (1 - 1000)
-        backgroundColor = 'black', # background color 
+        background = 'black', # background color
+        exportPath = '/path/to/your/file.gif', # export all frames to a GIF file when app terminates
         title = 'App Title', # your app title
         autoClear = True, # clear canvas after each frame
         setupFunc = setup, # setup function callback
