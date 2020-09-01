@@ -4,7 +4,7 @@ A graphical library built for visual arts. EasyDraw is built on top of tkinter a
 ## Prerequisites
 EasyDraw requires Pillow to be installed. this can be done using:
 
-`python3 -m pip install pillow`
+`python3 -m pip install --upgrade Pillow`
 
 for more information, read the instructions [here!](https://pillow.readthedocs.io/en/stable/installation.html)
 
