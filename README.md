@@ -1,17 +1,17 @@
 # EasyDraw
 A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
 
-## Prerequisites
+## Prequisites
 EasyDraw requires Pillow to be installed. this can be done using:
 
-`python3 -m pip install --upgrade Pillow`
+`$ python3 -m pip install --upgrade Pillow`
 
 for more information, read the instructions [here!](https://pillow.readthedocs.io/en/stable/installation.html)
 
 ## Installation
 EasyDraw can be installed with **pip**:
 
-`python3 -m pip install EasyDraw`
+`$ python3 -m pip install EasyDraw`
 
 
 ## Using EasyDraw
@@ -29,52 +29,205 @@ Then, you simply need to declare two functions:
 def setup(app):
     ''' write your setup codes here. 
         This function only executes once on app launch. '''
-    # move canvas center position
-    app.canvas.translate(400, 400)
-    # set fill value to a random color
-    app.canvas.fill(app.color.random())
-    # set stroke color to black
-    app.canvas.stroke('black')
-    # set stroke width
-    app.canvas.stroke_width(2)
     
 def draw(app):
     ''' codes written in this function are executed
         in each frame. This allows you to 
         create animations. '''
-    # draw a rectangle
-    app.canvas.rect(0, 0, 100, 100)
-    # draw a circle
-    app.canvas.circle(0, 0, 100)
-    # rotate canvas
-    app.canvas.rotate(90)
-    # set a pixel value
-    # RGB
-    app.canvas.point(50, 50, app.color.rgb(255, 0, 0))
-    # HSV
-    app.canvas.point(50, 50, app.color.hsv(100, 255, 255))
-    # HEX
-    app.canvas.point(50, 50, '#ffffff')
-    
-    # you can build custom shapes:
-    app.canvas.begin_shape()
-    app.canvas.vertex(0, 0)
-    app.canvas.vertex(100, 100)
-    app.canvas.vertex(0, 100)
-    app.canvas.vertex(0, 0)
-    app.canvas.end_shape()
 ```
 
-after declaring the functions, create an instance of EasyDraw class:
+You can also define a callback to get the position of mouse moving on the canavs:
 
 ```python
-ed.EasyDraw(width = 800, # width of the canvas
-        height = 800, # height of the canvas
-        fps = 30, # frames per second (1 - 1000)
-        background = 'black', # background color
-        exportPath = '/path/to/your/file.gif', # export all frames to a GIF file when app terminates
-        title = 'App Title', # your app title
-        autoClear = True, # clear canvas after each frame
-        setupFunc = setup, # setup function callback
-        drawFunc = draw) # draw function callback
+def motion(app):
+    # position of mouse relative to top left pixel of canvas
+    print(app.mouse_left)
+    print(app.mouse_top)
+    # position of mouse relative to canvas center when translation
+    # is applied
+    print(app.mouse_x)
+    print(app.mouse_y)    
+```
+
+The name of functions and their parameters can be anything of your choice.
+After declaring the functions, simply create an instance of EasyDraw class:
+
+```python
+ed.EasyDraw(
+        # width of the window/canvas
+        width = 800,
+        # height of the window/canvas
+        height = 800,
+        # frames per second (1 - 1000)
+        fps = 30,
+        # background color
+        background = 'black',
+        # export all frames to a GIF file when app terminates
+        exportPath = '/path/to/your/file.gif',
+        # your app title
+        title = 'App Title',
+        # clear canvas after each frame
+        autoClear = True,
+        # pass setup function callback
+        setupFunc = setup,
+        # pass draw function callback
+        drawFunc = draw,
+        # pass mouse move function callback
+        motionFunc = motion)
+```
+
+### Canvas property
+The `app.canvas` allows you to access EasyDraw methods for canvas manipulation.
+In case you want to use tkinter's default methods, use `app.canvas.handle`.
+
+```python
+app.canvas.handle.create_oval(x1, y1, x2, y2, ...)
+```
+
+#### Clearing Canvas
+You can use `clear()` method to delete objects on canvas.
+This invokes tkinter's `canvas.clear()` command directly.
+you can whether pass `'all'` as the argument to delete all objects, or pass the refrence to a specific one.
+
+```python
+app.canvas.clear('all')
+
+circle = app.canvas.circle(0, 0, 100)
+app.canvas.clear(circle)
+```
+
+#### Translating Coordinates
+You can use this method to simply move the origin (0, 0) to a custom position:
+
+`app.canvas.translate(int new_x, int new_y)`
+
+the following command moves the origin to pixel 200, 200:
+
+```python
+app.canvas.translate(200, 200)
+```
+
+#### Rotating Canvas
+This will rotate canvas and all elements on it:
+
+`app.canvas.rotate(int deg)`
+
+The following command represents a 45 degree rotation:
+
+```python
+app.canvas.rotate(45)
+```
+
+#### Fill and Stroke colors
+You can specify fill and stroke colors for shapes including: polygons, rectangles and circles.
+This can be done using:
+
+```python
+app.canvas.fill(COLOR)
+app.canvas.stroke(COLOR)
+```
+
+Colors can be defined in three ways. information on colors is available furthur down the page.
+
+#### Stroke Width
+The with/thickness of strokes can be altered as following:
+
+```python
+app.canvas.stroke_width(int val)
+```
+
+For example, this command sets the width to 2 pixels:
+```python
+app.canvas.stroke_width(2)
+```
+
+#### Creating Shapes and Lines
+You can create a circle:
+
+##### Circle
+
+```python
+app.canvas.circle(int x, int y, int radius)
+```
+
+This creates a circle with radius of 100 pixels on origin of canvas:
+
+```python
+app.canvas.circle(0, 0, 100)
+```
+
+##### Rectangle
+
+```python
+app.canvas.rect(int x1, int y1, int x2, int y2)
+```
+
+Creating a rectangle from 0, 0 to 100, 100:
+
+```python
+app.canvas.rect(0, 0, 100, 100)
+```
+
+##### Polygon
+
+You can create custom shapes by defining vertices.
+
+```python
+app.canvas.begin_shape()
+...
+app.canvas.vertex(int x, int y)
+...
+app.canvas.end_shape()
+```
+
+This creates a rectangle:
+
+```python
+c = app.canvas
+
+c.begin_shape()
+c.vertex(0, 0)
+c.vertex(100, 0)
+c.vertex(100, 100)
+c.vertex(0, 100)
+c.end_shape()
+```
+
+##### Line
+For creating lines, simply use:
+
+```python
+app.canvas.line(int x1, int y1, int x2, int y2)
+```
+
+#### Pixels
+EasyDraw provides methods for manipulating pixels of the canvas.
+
+##### Setting a Pixel
+you can set a pixel value using:
+
+```python
+app.canvas.point(int x, int y, color)
+
+app.canvas.point(20, 40, 'red')
+```
+
+#### Getting the value of a Pixel
+You can get the RGB value of a pixel using:
+
+```python
+app.canvas.get_pixel(int x, int y)
+```
+
+The returning value is a tuple of RGB values: `(Red, Green, Blue)`
+
+### Colors
+In addition to HEX values and the locally defined standard color names, EasyDraw provides methods for defining RGB and HSV colors:
+
+```python
+app.canvas.fill(app.color.rgb(255, 0, 0)
+app.canvas.circle(0, 0, 100)
+
+app.canvas.fill(app.color.hsv(150, 200, 255)
+app.canvas.rect(0, 0, 100, 100)
 ```
