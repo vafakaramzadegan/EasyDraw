@@ -276,3 +276,28 @@ app.canvas.circle(0, 0, 100)
 app.canvas.fill(app.color.hsv(150, 200, 255)
 app.canvas.rect(0, 0, 100, 100)
 ```
+
+### Vectors
+EasyDraw supports vector operations.
+
+```python
+from EasyDraw.Vector import Vector
+
+v1 = Vector(0, 0)
+v2 = Vector(200, 0)
+v3 = Vector(-100, -100)
+
+print(v1 + v2)
+print(v1 - v2)
+print(v1 * v2)
+print(-v1)
+```
+
+You can also find the angle between two vectors:
+
+```python
+v1 = Vector(200, 0)
+v2 = Vector(0, -200)
+
+print(v1.angle_between(v2))
+```
