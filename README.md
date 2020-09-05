@@ -278,6 +278,8 @@ app.canvas.rect(0, 0, 100, 100)
 ```
 
 ### Vectors
+![Angle between two vectors](https://github.com/vafakaramzadegan/EasyDraw/blob/master/images/vectors-angle.gif)
+
 EasyDraw supports vector operations.
 
 ```python
