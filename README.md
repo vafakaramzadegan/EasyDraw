@@ -1,6 +1,8 @@
 # EasyDraw
 A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
 
+![Rotating Polygon](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/rotating-polygon.gif)
+
 ## Prequisites
 EasyDraw requires `Pillow` and `pyscreenshot`. these packages will be automatically installed along with EasyDraw.
 
