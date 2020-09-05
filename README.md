@@ -2,17 +2,14 @@
 A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
 
 ## Prequisites
-EasyDraw requires Pillow to be installed. this can be done using:
-
-`$ python3 -m pip install --upgrade Pillow`
-
-for more information, read the instructions [here!](https://pillow.readthedocs.io/en/stable/installation.html)
+EasyDraw requires `Pillow` and `pyscreenshot`. these packages will be automatically installed along with EasyDraw.
 
 ## Installation
 EasyDraw can be installed with **pip**:
 
-`$ python3 -m pip install EasyDraw`
+`$ python3 -m pip install --upgrade EasyDraw`
 
+If you already have previous versions installed, running the above command automatically upgrades EasyDraw.
 
 ## Using EasyDraw
 EasyDraw helps you visualize your ideas easily on a 2D Canvas.
@@ -20,7 +17,7 @@ EasyDraw helps you visualize your ideas easily on a 2D Canvas.
 First, import the library:
 
 ```python
-import EasyDraw as ed
+from EasyDraw import EasyDraw
 ```
 
 Then, you simply need to declare two functions:
@@ -53,7 +50,7 @@ The name of functions and their parameters can be anything of your choice.
 After declaring the functions, simply create an instance of EasyDraw class:
 
 ```python
-ed.EasyDraw(
+EasyDraw(
         # width of the window/canvas
         width = 800,
         # height of the window/canvas
@@ -116,6 +113,24 @@ The following command represents a 45 degree rotation:
 
 ```python
 app.canvas.rotate(45)
+```
+
+#### Font Family and color
+You can specify font family and color as following:
+
+```python
+app.canvas.font_family('Tahoma 20 italic bold')
+app.canvas.font_color('white')
+app.canvas.font_color('#000000')
+app.canvas.font_color(app.color.rgb(255, 0, 0))
+app.canvas.font_color(app.color.hsv(100, 200, 255)
+```
+
+#### Writing text on Canvas
+Use `text` method to write text on canvas:
+
+```python
+app.canvas.text(100, 100, 'Hello World!')
 ```
 
 #### Fill and Stroke colors
@@ -193,11 +208,41 @@ c.vertex(0, 100)
 c.end_shape()
 ```
 
+##### Triangle
+You can draw a triangle by defining the vertices:
+
+```python
+app.canvas.triangle(int x1, int y1, int x2, int y2, int x3, int y3)
+
+app.canvas.triangle(0, -20, 20, 20, -20, 20)
+```
+
+##### Arc
+Draw arc on canvas using following command:
+
+```python
+app.canvas.arc(int x1, int y1, int x2, int y2, int start, int extend)
+
+app.canvas.translate(100, 100)
+app.canvas.arc(-30, 30, 30, -30, 0, 180)
+```
+
+The outline color can be set with `app.canvas.stroke()` command. also the outline width can be set with `app.canvas.stroke_width()`.
+
 ##### Line
 For creating lines, simply use:
 
 ```python
 app.canvas.line(int x1, int y1, int x2, int y2)
+```
+
+you can also pass two vectors as start and end points:
+
+```python
+v1 = Vector(0, 0)
+v2 = Vector(200, 0)
+
+app.canvas.line(v1, v2)
 ```
 
 #### Pixels
