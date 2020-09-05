@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="EasyDraw",
-    version="0.2.0",
+    version="0.4.0",
     author="Vafa Karamzadegan",
     author_email="vafa.k@live.com",
-    description="A graphical library build for visual arts. EasyDraw is built on top of tkinter and has more functionalities.",
+    description="A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/vafakaramzadegan/EasyDraw",
@@ -19,4 +19,8 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    install_requires=[
+        "pyscreenshot",
+        "Pillow"
+    ]
 )
