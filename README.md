@@ -186,6 +186,18 @@ The following command represents a 45 degree rotation:
 app.canvas.rotate(45)
 ```
 
+#### Flipping Canvas
+You can flip canvas vertically and horizontally:
+
+```python
+# horizontal
+app.canvas.flip('x')
+# vertical
+app.canvas.flip('y')
+# both
+app.canvas.flip('xy')
+```
+
 #### Font Family and color
 You can specify font family and color as following:
 
@@ -341,11 +353,16 @@ The returning value is a tuple of RGB values: `(Red, Green, Blue)`
 In addition to HEX values and the locally defined standard color names, EasyDraw provides methods for defining RGB and HSV colors:
 
 ```python
-app.canvas.fill(app.color.rgb(255, 0, 0)
+from EasyDraw.Color import RGB, HSV, RandomColor
+
+app.canvas.fill(RGB(255, 0, 0))
 app.canvas.circle(0, 0, 100)
 
-app.canvas.fill(app.color.hsv(150, 200, 255)
+app.canvas.fill(HSV(150, 200, 255))
 app.canvas.rect(0, 0, 100, 100)
+
+app.canvas.fill(RandomColor())
+app.canvas.rect(100, 100, 200, 200)
 ```
 
 ### Vectors
@@ -364,6 +381,7 @@ print(v1 + v2)
 print(v1 - v2)
 print(v1 * v2)
 print(-v1)
+print(v1.x, v1.y)
 ```
 
 You can also find the angle between two vectors:
