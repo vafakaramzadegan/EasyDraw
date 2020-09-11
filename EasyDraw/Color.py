@@ -1,11 +1,11 @@
 import random
-
+from warnings import warn
 
 class Color:
     def __init__(self):
         pass
 
-    def __hsv_to_rgb(self, HSV):
+    def hsv_to_rgb(self, HSV):
         '''convert an integer HSV tuple (value range from 0 to 255) to a RGB tuple'''
         # Unpack the HSV tuple for readability
         H, S, V = HSV
@@ -50,28 +50,47 @@ class Color:
             B = Q
         return (R, G, B)
 
-    # convert rgb tuple to hex string
-    def __rgb_to_hex(self, rgb):
+    def rgb_to_hex(self, rgb):
         return "#%02x%02x%02x" % rgb 
 
-    # convert rgb value to hex
     def rgb(self, r, g, b):
-        return self.__rgb_to_hex((r, g, b))
+        warn("Please use RGB class to build color: RGB(r, g, b)", DeprecationWarning, stacklevel = 2)
+        return RGB(r, g, b)
 
-    # convert hsv value to hex
     def hsv(self, h, s, v):
-        return self.__rgb_to_hex(
-            self.__hsv_to_rgb((h, s, v))
-        )
+        warn("Please use HSV class to build color: HSV(h, s, v)", DeprecationWarning, stacklevel = 2)
+        return HSV(h, s, v)
     
-    # blend two rgba colors
-    def blend_colors(self, rgba1, rgba2):
+    def random(self):
+        warn("Please use RandomColor class to build color: myColor = RandomColor()", DeprecationWarning, stacklevel = 2)
+        return RandomColor()
+
+
+# convert rgb value to hex
+class RGB(object):
+    def __new__(self, r, g, b):
+        c = Color()
+        return c.rgb_to_hex((r, g, b))
+
+# convert hsv value to hex
+class HSV(object):
+    def __new__(self, h, s, v):
+        c = Color()
+        return c.rgb_to_hex(
+            c.hsv_to_rgb((h, s, v))
+        )
+
+# blend two rgba colors
+class BlendColors:
+    def __new__(self, rgba1, rgba2):
         red   = (rgba1[0] * rgba1[3]) + (rgba2[0] * (1.0 - rgba2[3]))
         green = (rgba1[1] * rgba1[3]) + (rgba2[1] * (1.0 - rgba2[3]))
         blue  = (rgba1[2] * rgba1[3]) + (rgba2[2] * (1.0 - rgba2[3]))
         return (int(red), int(green), int(blue))
 
-    # generate random HEX color
-    def random(self):
+# generate random HEX color
+class RandomColor:
+    def __new__(self):
         color = tuple(random.sample(range(0, 255), 3))
-        return self.__rgb_to_hex(color)
+        c = Color()
+        return c.rgb_to_hex(color)

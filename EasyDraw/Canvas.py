@@ -16,6 +16,8 @@ class Canvas:
         self.__hist.append({})
         # frames to export as a GIF file
         self.__frames = []
+        self.__parameters()['flip_x']          = False
+        self.__parameters()['flip_y']          = False
         # canvas origin position
         self.__parameters()['center_x']        = 0
         self.__parameters()['center_y']        = 0
@@ -103,6 +105,11 @@ class Canvas:
         sin_val = math.sin(angle)
         new_coords = []
         for x_old, y_old in coords:
+            if self.__parameters()['flip_y']:
+                y_old = - y_old
+            if self.__parameters()['flip_x']:
+                x_old = - x_old
+
             x_new = (x_old * cos_val - y_old * sin_val)
             y_new = (x_old * sin_val + y_old * cos_val)
 
@@ -124,6 +131,16 @@ class Canvas:
     def translate(self, x, y):
         self.__parameters()['center_x'] = x
         self.__parameters()['center_y'] = y
+
+    def flip(self, direction):
+        dir = direction.lower()
+        if any(c not in 'xy' for c in dir):
+            raise ValueError('The parameter must be either "X" or "Y".')
+
+        if 'x' in dir:
+            self.__parameters()['flip_x'] = not self.__parameters()['flip_x']
+        if 'y' in dir:
+            self.__parameters()['flip_y'] = not self.__parameters()['flip_y']
 
     # set rotation value
     def rotate(self, deg):
@@ -160,9 +177,9 @@ class Canvas:
         cy = (y1 + y2) // 2
 
         if self.app.useBounds:
-            size = ((radius * 2 * self.app.scale_x), (radius * 2 * self.app.scale_y))
+            size = ((radius * 2 * self.app.scale_x) + 1, (radius * 2 * self.app.scale_y) + 1)
         else:
-            size = ((radius * 2), (radius * 2))
+            size = ((radius * 2) + 1, (radius * 2) + 1)
 
         alpha = int(kwargs.get('alpha', 1) * 255)
         bgAlpha = alpha
@@ -234,7 +251,7 @@ class Canvas:
                                         width = self.__parameters()['stroke_width'])
     @dispatch(Vector.Vector, Vector.Vector)
     def line(self, v1, v2):
-        return self.line(int(v1.a), int(v1.b), int(v2.a), int(v2.b))
+        return self.line(int(v1.x), int(v1.y), int(v2.x), int(v2.y))
 
     # draw triangle on canvas using customShape
     @dispatch(object, object, object, object, object, object)
@@ -249,9 +266,9 @@ class Canvas:
         return obj
     @dispatch(Vector.Vector, Vector.Vector, Vector.Vector)
     def triangle(self, v1, v2, v3):
-        return self.triangle(v1.a, v1.b,
-                             v2.a, v2.b,
-                             v3.a, v3.b)
+        return self.triangle(v1.x, v1.y,
+                             v2.x, v2.y,
+                             v3.x, v3.y)
 
     # draw arc on canvas
     def arc(self, x1, y1, x2, y2, start, extend):
