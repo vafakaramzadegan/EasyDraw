@@ -1,10 +1,12 @@
 # EasyDraw
 A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
 
+EasyDraw is inspired by Processing.
+
 ![Rotating Polygon](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/rotating-polygon.gif)
 
 ## Prequisites
-EasyDraw requires `Pillow` and `pyscreenshot`. these packages will be automatically installed along with EasyDraw.
+EasyDraw requires `Pillow`, `multipledispatch` and `pyscreenshot`.these packages will be automatically installed along with EasyDraw.
 
 ## Installation
 EasyDraw can be installed with **pip**:
@@ -35,19 +37,6 @@ def draw(app):
         create animations. '''
 ```
 
-You can also define a callback to get the position of mouse moving on the canavs:
-
-```python
-def motion(app):
-    # position of mouse relative to top left pixel of canvas
-    print(app.mouse_left)
-    print(app.mouse_top)
-    # position of mouse relative to canvas center when translation
-    # is applied
-    print(app.mouse_x)
-    print(app.mouse_y)    
-```
-
 The name of functions and their parameters can be anything of your choice.
 After declaring the functions, simply create an instance of EasyDraw class:
 
@@ -70,9 +59,73 @@ EasyDraw(
         # pass setup function callback
         setupFunc = setup,
         # pass draw function callback
-        drawFunc = draw,
-        # pass mouse move function callback
-        motionFunc = motion)
+        drawFunc = draw)
+```
+
+### Callbacks
+You can also define a callbacks to get mouse/pointer information:
+
+#### Mouse moving on canvas
+```python
+def motion(app):
+    # position of mouse relative to top left pixel of canvas
+    print(app.mouse_left)
+    print(app.mouse_top)
+    # position of mouse relative to canvas center when translation
+    # is applied
+    print(app.mouse_x)
+    print(app.mouse_y)
+    
+EasyDraw(
+        ...
+        mouseMoveFunc = motion
+        ...
+        )
+```
+
+#### Mouse click
+```python
+def mouseClick(app, button):
+    # you can access mouse position from "app" parameter
+    # "button" parameter indicates which button was pressed
+    # either of "left", "middle" or "right" is returned
+    ...
+    
+EasyDraw(
+        ...
+        clickFunc = mouseClick
+        ...
+        )
+```
+
+#### Mouse button down
+```python
+def mouseButtonDown(app, button):
+    # you can access mouse position from "app" parameter
+    # "button" parameter indicates which button was pressed
+    # either "left" or "right" is returned
+    ...
+    
+EasyDraw(
+        ...
+        mouseDownFunc = mouseButtonDown
+        ...
+        )
+```
+
+#### Mouse button up
+```python
+def mouseButtonUp(app, button):
+    # you can access mouse position from "app" parameter
+    # "button" parameter indicates which button was released
+    # either "left" or "right" is returned
+    ...
+    
+EasyDraw(
+        ...
+        mouseUpFunc = mouseButtonUp
+        ...
+        )
 ```
 
 ### Canvas property
@@ -93,6 +146,22 @@ app.canvas.clear('all')
 
 circle = app.canvas.circle(0, 0, 100)
 app.canvas.clear(circle)
+```
+
+#### Push and Pop Methods
+The `push()` function saves current styles and transformations, while `pop()` restores them,
+
+```python
+def draw(app):
+    c = app.canvas
+    
+    c.translate(100, 100)
+    c.line(0, 0, 100, 0)
+    
+    c.push()
+    c.translate(0, 0)
+    c.line(100, 100, 100, 200)
+    c.pop()
 ```
 
 #### Translating Coordinates
