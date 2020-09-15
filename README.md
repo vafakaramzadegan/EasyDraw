@@ -6,7 +6,7 @@ EasyDraw is inspired by Processing.
 ![Rotating Polygon](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/rotating-polygon.gif)
 
 ## Prequisites
-EasyDraw requires `Pillow`, `multipledispatch` and `pyscreenshot`.these packages will be automatically installed along with EasyDraw.
+EasyDraw requires `Pillow`, `multipledispatch` and `pyscreenshot`. these packages will be automatically installed along with EasyDraw.
 
 ## Installation
 EasyDraw can be installed with **pip**:
@@ -61,6 +61,24 @@ EasyDraw(
         # pass draw function callback
         drawFunc = draw)
 ```
+
+### Coordinate System
+EasyDraw provides a canvas for drawing where the top left pixel is (0, 0). The values increase as you go down to bottom right pixel.
+the origin can be changed using `translate(x, y)` command.
+
+But, you can also define boundaries for the canvas and change the Domain and Range.
+Consider having a 400x400 px canvas, setting the `bounds` as following divides the canvas to 10 horizontal and vertical units.
+```python
+EasyDraw(
+        ...
+        # (min x, min y, max y, max y)
+        bounds = (-5, -5, 5, 5)
+        # whether to show the Grid or not
+        showGrid = True
+        ...
+        )
+```
+
 
 ### Callbacks
 You can also define a callbacks to get mouse/pointer information:
@@ -197,6 +215,12 @@ app.canvas.flip('y')
 # both
 app.canvas.flip('xy')
 ```
+#### Zoom
+You can apply a zoom value to scale all the elements of the canvas:
+```python
+# 2x magnification
+app.canvas.zoom(2)
+```
 
 #### Font Family and color
 You can specify font family and color as following:
@@ -214,6 +238,12 @@ Use `text` method to write text on canvas:
 
 ```python
 app.canvas.text(100, 100, 'Hello World!')
+```
+
+All text objects on the canvas have an `anchor` property which defines their alignment:
+```python
+# nw, n, ne, center, w, e, sw, s, se
+app.canvas.text_anchor('nw')
 ```
 
 #### Fill and Stroke colors
