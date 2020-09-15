@@ -246,6 +246,21 @@ All text objects on the canvas have an `anchor` property which defines their ali
 app.canvas.text_anchor('nw')
 ```
 
+#### Draw image on canvas
+You can load an image from file and draw it on canvas:
+```python
+# using absolute position
+app.canvas.create_image(int x, int y, path_to_file)
+
+# using vector
+app.canvas.create_image(Vector v, path_to_file)
+```
+You can also change the scale:
+
+```python
+app.canvas.create_image(0, 0, 'c:\my_img.png', scale = 0.5)
+'''
+
 #### Fill and Stroke colors
 You can specify fill and stroke colors for shapes including: polygons, rectangles and circles.
 This can be done using:
