@@ -1,4 +1,5 @@
 import math
+import random
 
 class Vector(object):
     '''Class to define 2D vectors'''
@@ -45,3 +46,16 @@ class Vector(object):
     def distance_from(self, v2):
         self.__check_type(v2)
         return math.sqrt(((self.x - v2.x) ** 2) + ((self.y - v2.y) ** 2))
+
+    # return heading angle
+    def heading(self):
+        return self.angle_between(Vector(1, 0))
+
+    # set vector magnitude
+    def set_mag(self, mag):
+        self.x *= mag
+        self.y *= mag
+
+class RandomVector:
+    def __new__(self):
+        return Vector(random.uniform(-1, 1), random.uniform(-1, 1))

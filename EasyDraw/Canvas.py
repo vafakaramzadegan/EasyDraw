@@ -16,6 +16,7 @@ class Canvas:
         self.__hist.append({})
         # frames to export as a GIF file
         self.__frames = []
+        # flip canvas
         self.__parameters()['flip_x']          = False
         self.__parameters()['flip_y']          = False
         # canvas origin position
@@ -23,6 +24,7 @@ class Canvas:
         self.__parameters()['center_y']        = 0
         # rotation degree
         self.__parameters()['rotate_deg']      = 0
+        self.__parameters()['zoom']            = 1
         # fill and stroke color
         self.__parameters()['fill_color']      = 'white'
         self.__parameters()['stroke_color']    = 'black'
@@ -31,6 +33,7 @@ class Canvas:
         self.__parameters()['stroke_disabled'] = False
         # vertices data to create polygon
         self.__vertices        = []
+
         self.__width           = kwargs.get('width', 0)
         self.__height          = kwargs.get('height', 0)
         # list of shapes drawn on PhotoImage
@@ -38,6 +41,8 @@ class Canvas:
         # font styles
         self.__parameters()['font_family']     = 'Tahoma 20'
         self.__parameters()['font_color']      = 'black'
+        # text object anchor point
+        self.__parameters()['text_anchor']     = 'center'
 
         # tkinter's default methods are available in handle
         self.handle = tk.Canvas(master,
@@ -105,6 +110,7 @@ class Canvas:
         sin_val = math.sin(angle)
         new_coords = []
         for x_old, y_old in coords:
+            # check if canvas is flipped
             if self.__parameters()['flip_y']:
                 y_old = - y_old
             if self.__parameters()['flip_x']:
@@ -116,6 +122,10 @@ class Canvas:
             if self.app.useBounds:
                 x_new *= self.app.scale_x
                 y_new *= -self.app.scale_y
+
+            # set zoom
+            x_new *= self.__parameters()['zoom']
+            y_new *= self.__parameters()['zoom']
 
             new_coords.append((x_new + cx, y_new + cy))
 
@@ -132,6 +142,7 @@ class Canvas:
         self.__parameters()['center_x'] = x
         self.__parameters()['center_y'] = y
 
+    # flip canvas
     def flip(self, direction):
         dir = direction.lower()
         if any(c not in 'xy' for c in dir):
@@ -145,6 +156,10 @@ class Canvas:
     # set rotation value
     def rotate(self, deg):
         self.__parameters()['rotate_deg'] = deg
+
+    # set zoom value
+    def zoom(self, scale):
+        self.__parameters()['zoom'] = scale
 
     # set fill color
     def fill(self, color):
@@ -341,12 +356,16 @@ class Canvas:
     def font_color(self, color):
         self.__parameters()['font_color'] = color
 
+    def text_anchor(self, anchor):
+        self.__parameters()['text_anchor'] = anchor
+
     # put text on canvas
     def text(self, x, y, text):
         return self.handle.create_text(self.transform_coords([[x, y]]),
                                        fill = self.__parameters()['font_color'],
                                        font = self.__parameters()['font_family'],
                                        angle = -self.__parameters()['rotate_deg'],
+                                       anchor = self.__parameters()['text_anchor'],
                                        text = text)
 
     # set a pixel
@@ -370,6 +389,8 @@ class Canvas:
         except:
             return (0, 0, 0)
 
+    # load an image from path and draw it on canvas
+    @dispatch(object, object, object)
     def create_image(self, x, y, path, **kwargs):
         im = Image.open(path)
 
@@ -384,6 +405,9 @@ class Canvas:
         return self.handle.create_image(self.transform_coords([[x, y]]),
                                         image = self.__alpha_shapes[-1],
                                         anchor = 'center')
+    @dispatch(Vector.Vector, object)
+    def create_image(self, v, path, **kwargs):
+        return self.create_image(v.x, v.y, path, **kwargs)
 
     # return the latest parameters
     def __parameters(self):

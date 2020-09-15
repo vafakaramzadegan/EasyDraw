@@ -17,6 +17,7 @@ class EasyDraw(object):
     '''EasyDraw main class'''
     def __init__(self, **kwargs):
         print('Hello from EasyDraw!')
+        self.tick         = 1
         self.width        = kwargs.get('width', 400)
         self.height       = kwargs.get('height', 400)
         self.autoClear    = kwargs.get('autoClear', True)  
@@ -114,9 +115,8 @@ class EasyDraw(object):
     '''mouse related methods ---------------------------------------'''
     def __get_mouse_positions(self, e):
         if self.useBounds:
-            transformed = self.canvas.transform_coords([[e.x, e.y]])
-            self.mouse_x = transformed[0][0]
-            self.mouse_y = transformed[0][1]
+            self.mouse_x = e.x
+            self.mouse_y = e.y
             self.mouse_x = self.tools.map(self.mouse_x,
                                           0,
                                           self.width,
@@ -183,6 +183,7 @@ class EasyDraw(object):
             self.canvas.clear_data()
 
         if callable(self.drawFunction):
+            self.tick += 1
             self.drawFunction(self)
         else:
             raise Exception('Draw function is either undefined or not callable!')
