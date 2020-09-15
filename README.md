@@ -429,11 +429,21 @@ print(-v1)
 print(v1.x, v1.y)
 ```
 
-You can also find the angle between two vectors:
+You can also get other information on vectors:
 
 ```python
 v1 = Vector(200, 0)
 v2 = Vector(0, -200)
 
+# angle between v1 & v2
 print(v1.angle_between(v2))
+
+# distance between v1 & v2
+print(v1.distance_from(v2))
+
+# heading angle of v1
+print(v1.heading)
+
+# change the magnitude
+v1.set_mag(2)
 ```
