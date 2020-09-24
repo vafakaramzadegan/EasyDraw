@@ -24,6 +24,7 @@ class Canvas:
         self.__parameters()['center_y']        = 0
         # rotation degree
         self.__parameters()['rotate_deg']      = 0
+        # zoom value
         self.__parameters()['zoom']            = 1
         # fill and stroke color
         self.__parameters()['fill_color']      = 'white'
@@ -264,6 +265,9 @@ class Canvas:
                                         [x2, y2]]),
                                         fill = self.__parameters()['stroke_color'],
                                         width = self.__parameters()['stroke_width'])
+    @dispatch(Vector.Vector)
+    def line(self, v):
+        return self.line(0, 0, int(v.x), int(v.y))
     @dispatch(Vector.Vector, Vector.Vector)
     def line(self, v1, v2):
         return self.line(int(v1.x), int(v1.y), int(v2.x), int(v2.y))
@@ -288,7 +292,7 @@ class Canvas:
     # draw arc on canvas
     def arc(self, x1, y1, x2, y2, start, extend):
         return self.handle.create_arc(self.transform_coords([[x1, y1], [x2, y2]]),
-                                      extent = -extend,
+                                      extent = extend,
                                       start = -start,
                                       style = tk.ARC,
                                       outline = self.__parameters()['stroke_color'],
@@ -356,6 +360,8 @@ class Canvas:
     def font_color(self, color):
         self.__parameters()['font_color'] = color
 
+    # set text anchor point
+    # nw, n, ne, center, sw, s, se
     def text_anchor(self, anchor):
         self.__parameters()['text_anchor'] = anchor
 
@@ -369,6 +375,7 @@ class Canvas:
                                        text = text)
 
     # set a pixel
+    @dispatch(object, object, object)
     def point(self, x, y, color):
         for point_x, point_y in self.transform_coords([[x, y]]):
             if point_x >= 0 and point_y >= 0:
@@ -376,7 +383,10 @@ class Canvas:
                                         [x, y],
                                         [x + 1, y + 1]]),
                                         fill = color)
-                                        
+    @dispatch(Vector.Vector, object)
+    def point(self, v, color):
+        return self.point(v.x, v.y, color)
+
     # get RGB value of a pixel
     def get_pixel(self, x, y):
         x += self.__parameters()['center_x']
@@ -401,7 +411,7 @@ class Canvas:
             newheight = math.floor(height * scale)
             im = im.resize((newWidth, newheight), Image.ANTIALIAS)
 
-        self.__alpha_shapes.append(ImageTk.PhotoImage(im.rotate(self.__parameters()['rotate_deg'], expand = True)))
+        self.__alpha_shapes.append(ImageTk.PhotoImage(im.rotate(-self.__parameters()['rotate_deg'], expand = True)))
         return self.handle.create_image(self.transform_coords([[x, y]]),
                                         image = self.__alpha_shapes[-1],
                                         anchor = 'center')
@@ -412,6 +422,12 @@ class Canvas:
     # return the latest parameters
     def __parameters(self):
         return self.__hist[len(self.__hist) - 1]
+
+    def bring_to_front(self, item):
+        self.handle.tag_lower(item)
+
+    def send_to_back(self, item):
+        self.handle.tag_raise(item)
 
     # push current parameters
     def push(self):
