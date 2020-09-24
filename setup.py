@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="EasyDraw",
-    version="0.5.2",
+    version="0.6.0",
     author="Vafa Karamzadegan",
     author_email="vafa.k@live.com",
     description="A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.",
