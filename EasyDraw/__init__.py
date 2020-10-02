@@ -72,6 +72,8 @@ class EasyDraw(object):
         master.bind('<ButtonRelease-3>', self.__right_mouse_btn_up)
         
         master.bind('<Escape>', self.__on_escape_key)
+        master.bind('<Key>', self.__on_key_press)
+        master.bind('<KeyRelease>', self.__on_key_release)
 
         # set window title
         master.title(kwargs.get('title', 'EasyDraw App'))
@@ -94,7 +96,11 @@ class EasyDraw(object):
         # ------------------------------------
 
         self.setupFunction     = kwargs.get('setupFunc', None)
-        self.drawFunction      = kwargs.get('drawFunc', None)  
+        self.drawFunction      = kwargs.get('drawFunc', None)
+
+        self.keyPressFunc      = kwargs.get('keyPressFunc', None)
+        self.keyReleaseFunc    = kwargs.get('keyReleaseFunc', None)
+        
         # mouse event callbacks
         self.mouseMoveFunction = kwargs.get('mouseMoveFunc', None)
         self.clickFunction     = kwargs.get('clickFunc', None)
@@ -121,7 +127,7 @@ class EasyDraw(object):
                 bx = self.width - (max_x * self.scale_x)
             by = 0
             if min_y >= 0:
-                by = -(min_x * self.scale_y)
+                by = -(min_y * self.scale_y)
             else:
                 by = (max_y * self.scale_y)
             self.bound_center = (bx, by)
@@ -194,7 +200,7 @@ class EasyDraw(object):
         c.translate(0, 0)
         c.font_color('white')
         c.text_anchor('nw')
-        c.font_family('Verdana 14')
+        c.font_family('12')
 
         str = (
             f'fps:        {(self.tick / (time.time() - self.__start_time)):.2f}\n'\
@@ -213,7 +219,7 @@ class EasyDraw(object):
         c.fill('black')
         c.stroke('black')
         c.rect(bounds[0] - 16, bounds[1] - 16, bounds[2] + 16, bounds[3] + 16, alpha = .7)
-        c.send_to_back(obj)
+        c.bring_to_front(obj)
         c.pop()
 
     def __setup(self):
@@ -258,3 +264,11 @@ class EasyDraw(object):
 
     def __on_escape_key(self, e):
         self.master.destroy()
+
+    def __on_key_press(self, e):
+        if self.keyPressFunc:
+            self.keyPressFunc(self, e)
+
+    def __on_key_release(self, e):
+        if self.keyReleaseFunc:
+            self.keyReleaseFunc(self, e)

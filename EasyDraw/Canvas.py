@@ -44,7 +44,8 @@ class Canvas:
         self.__parameters()['font_color']      = 'black'
         # text object anchor point
         self.__parameters()['text_anchor']     = 'center'
-
+        self.__parameters()['image_anchor']    = 'center'
+        
         # tkinter's default methods are available in handle
         self.handle = tk.Canvas(master,
                                 width              = self.__width,
@@ -399,11 +400,17 @@ class Canvas:
         except:
             return (0, 0, 0)
 
+    def image_anchor(self, anchor):
+        self.__parameters()['image_anchor'] = anchor
+
     # load an image from path and draw it on canvas
     @dispatch(object, object, object)
-    def create_image(self, x, y, path, **kwargs):
-        im = Image.open(path)
-
+    def create_image(self, x, y, source, **kwargs):
+        try:
+            im = Image.open(source)
+        except:
+            im = source
+        
         scale = kwargs.get('scale', None)
         if scale != None:
             width, height = im.size
@@ -414,19 +421,25 @@ class Canvas:
         self.__alpha_shapes.append(ImageTk.PhotoImage(im.rotate(-self.__parameters()['rotate_deg'], expand = True)))
         return self.handle.create_image(self.transform_coords([[x, y]]),
                                         image = self.__alpha_shapes[-1],
-                                        anchor = 'center')
+                                        anchor = self.__parameters()['image_anchor'])
     @dispatch(Vector.Vector, object)
-    def create_image(self, v, path, **kwargs):
-        return self.create_image(v.x, v.y, path, **kwargs)
+    def create_image(self, v, source, **kwargs):
+        return self.create_image(v.x, v.y, source, **kwargs)
+
+    # check if specific items have collided
+    def check_overlap(self, items):
+        bounds = self.handle.bbox(items[0])
+        overlapping = self.handle.find_overlapping(bounds[0], bounds[1], bounds[2], bounds[3])
+        return set(items).issubset(set(overlapping))
 
     # return the latest parameters
     def __parameters(self):
         return self.__hist[len(self.__hist) - 1]
 
-    def bring_to_front(self, item):
+    def send_to_back(self, item):
         self.handle.tag_lower(item)
 
-    def send_to_back(self, item):
+    def bring_to_front(self, item):
         self.handle.tag_raise(item)
 
     # push current parameters
