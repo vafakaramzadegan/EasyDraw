@@ -56,6 +56,10 @@ EasyDraw(
         title = 'App Title',
         # clear canvas after each frame
         autoClear = True,
+        # switch to fullscreen view
+        fullscreen = True,
+        # show runtime information on screen
+        showStats = True,
         # pass setup function callback
         setupFunc = setup,
         # pass draw function callback
@@ -142,6 +146,32 @@ def mouseButtonUp(app, button):
 EasyDraw(
         ...
         mouseUpFunc = mouseButtonUp
+        ...
+        )
+```
+
+#### KeyPress Event
+```python
+    def keyPress(app, e):
+        print(e)
+        ...
+        
+EasyDraw(
+        ...
+        keyPressFunc = keyPress
+        ...
+        )
+```
+
+#### keyRelease Event
+```python
+    def keyRelease(app, e):
+        print(e)
+        ...
+        
+EasyDraw(
+        ...
+        keyReleaseFunc = keyPress
         ...
         )
 ```
