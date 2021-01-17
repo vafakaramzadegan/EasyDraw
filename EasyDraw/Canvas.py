@@ -24,6 +24,7 @@ class Canvas:
         self.__parameters()['center_y']        = 0
         # rotation degree
         self.__parameters()['rotate_deg']      = 0
+        self.__parameters()['text_rotate_deg'] = 0
         # zoom value
         self.__parameters()['zoom']            = 1
         # fill and stroke color
@@ -159,6 +160,9 @@ class Canvas:
     def rotate(self, deg):
         self.__parameters()['rotate_deg'] = deg
 
+    def rotate_text(self, deg):
+        self.__parameters()['text_rotate_deg'] = deg
+
     # set zoom value
     def zoom(self, scale):
         self.__parameters()['zoom'] = scale
@@ -214,7 +218,7 @@ class Canvas:
         image = Image.new('RGBA', size)
 
         draw = ImageDraw.Draw(image)
-        draw.ellipse((0, 0, size), fill = fill, outline = stroke)
+        draw.ellipse((0, 0, size), fill = fill, outline = stroke, width = self.__parameters()['stroke_width'])
 
         self.__alpha_shapes.append(ImageTk.PhotoImage(image.rotate(-self.__parameters()['rotate_deg'], expand = True)))
             
@@ -250,7 +254,7 @@ class Canvas:
         image = Image.new('RGBA', (math.floor(dx), math.floor(dy)))
         draw = ImageDraw.Draw(image)
         draw.rectangle((0, 0, dx, dy), fill = fill, outline = stroke, width = self.__parameters()['stroke_width'])
-        self.__alpha_shapes.append(ImageTk.PhotoImage(image.rotate(self.__parameters()['rotate_deg'], expand = True)))
+        self.__alpha_shapes.append(ImageTk.PhotoImage(image.rotate(-self.__parameters()['rotate_deg'], expand = True)))
         return self.handle.create_image(cx, cy,
                                         image = self.__alpha_shapes[-1],
                                         anchor = 'center')
@@ -371,7 +375,7 @@ class Canvas:
         return self.handle.create_text(self.transform_coords([[x, y]]),
                                        fill = self.__parameters()['font_color'],
                                        font = self.__parameters()['font_family'],
-                                       angle = -self.__parameters()['rotate_deg'],
+                                       angle = -self.__parameters()['text_rotate_deg'],
                                        anchor = self.__parameters()['text_anchor'],
                                        text = text)
 
