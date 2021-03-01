@@ -1,5 +1,5 @@
-from EasyDraw import *
-from EasyDraw.Color import *
+from EasyDraw import EasyDraw
+from EasyDraw.Color import RGB
 
 import random
 
@@ -116,15 +116,27 @@ class Board:
 
 
     def shift_left(self):
-        self.cp_l -= 1
+        if self.cp_l > 0:
+            for i, x in enumerate(self.cp):
+                for j, y in enumerate(x):
+                    if self.blocks[self.cp_l-1][self.cp_t+j] > -1:
+                        return
+            self.cp_l -= 1
 
 
     def shift_right(self):
-        self.cp_l += 1
+        if len(self.cp) + self.cp_l < self.hblocks_cnt:
+            for i, x in enumerate(self.cp):
+                for j, y in enumerate(x):
+                    if self.blocks[self.cp_l+i+1][self.cp_t+j] > -1:
+                        return
+            self.cp_l += 1
 
 
     def rotate_piece(self):
         self.cp = list(zip(*self.cp[::-1]))
+        while len(self.cp) + self.cp_l > self.hblocks_cnt:
+            self.cp_l -= 1
 
 
     def fast_drop(self):
@@ -181,14 +193,6 @@ class Board:
         c.push()
         c.stroke(colors[self.cp_ind][0])
         c.fill(colors[self.cp_ind][1])
-
-        for i, x in enumerate(self.cp):
-            for j, y in enumerate(x):
-                if y == 1:
-                    if i + self.cp_l < 0:
-                        self.cp_l += 1
-                    elif i + self.cp_l > self.hblocks_cnt - 1:
-                        self.cp_l -= 1
 
         for i, x in enumerate(self.cp):
             for j, y in enumerate(x):
