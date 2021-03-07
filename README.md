@@ -284,6 +284,9 @@ app.canvas.create_image(int x, int y, path_to_file)
 
 # using vector
 app.canvas.create_image(Vector v, path_to_file)
+
+v = Vector(100, 100)
+app.canvas.create_image(v, "/path/to/an/image.jpeg")
 ```
 You can also change the scale:
 
@@ -392,15 +395,15 @@ For creating lines, simply use:
 
 ```python
 app.canvas.line(int x1, int y1, int x2, int y2)
-```
 
-you can also pass two vectors as start and end points:
+# draw line between two coordinates
+app.canvas.line(int x1, int y1, int x2, int y2)
 
-```python
-v1 = Vector(0, 0)
-v2 = Vector(200, 0)
+# draw line between two vectors
+app.canvas.line(vector v1, vector v2)
 
-app.canvas.line(v1, v2)
+# draw a line from origin to a vector
+app.canvas.line(vector v)
 ```
 
 #### Pixels
@@ -412,7 +415,12 @@ you can set a pixel value using:
 ```python
 app.canvas.point(int x, int y, color)
 
+# absolute position
 app.canvas.point(20, 40, 'red')
+
+# vector position
+v = Vector(100, 200)
+app.canvas.point(v, RGB(0, 255, 0))
 ```
 
 #### Getting the value of a Pixel
