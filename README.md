@@ -459,11 +459,19 @@ print(-v1)
 print(v1.x, v1.y)
 ```
 
-You can also get other information on vectors:
+You can also get other useful information on vectors:
 
 ```python
 v1 = Vector(200, 0)
 v2 = Vector(0, -200)
+
+# vector length
+print(v1.length())
+# or
+print(v1.mag())
+
+# suqared vector magnitude
+print(v1.mag_square())
 
 # angle between v1 & v2
 print(v1.angle_between(v2))
@@ -474,6 +482,52 @@ print(v1.distance_from(v2))
 # heading angle of v1
 print(v1.heading)
 
-# change the magnitude
-v1.set_mag(2)
+# get linear interpolation between two vectors
+v1.lerp(v2, 0.5)
+```
+
+And, for vector manipulation:
+
+```python
+vec = Vector(200, 0)
+
+# get a copy of a vector
+vec2 = vec1.copy()
+
+# set vector magnitude
+vec.set_mag(0.5)
+
+# limit vector length to a value
+vec.limit(20)
+
+# normalize a vector
+vec.normalize()
+
+```
+
+####Random Vector
+
+You can create a random unit vector:
+
+```python
+from EasyDraw.Vector import RandomVector
+
+# a random unit vector with the length equals to 1
+# all vector operations can be used on a RandomVector
+vec = RandomVector()
+```
+
+####Create a vector from angle
+
+You can create a vector from specific angle:
+
+```python
+from EasyDraw.Vector import VectorFromAngle
+
+# creates a 45-degree vector with its length equal to 1
+vec = VectorFromAngle(45)
+
+# you can set the length of the vector
+# this creates a 90-degree vector with a length of 10
+vec = VectorFromAngle(90, 10)
 ```
