@@ -441,7 +441,7 @@ app.canvas.rect(100, 100, 200, 200)
 ```
 
 ### Vectors
-![Angle between two vectors](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/vectors-angle.gif)
+![Vector car](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/vector_car.gif)
 
 EasyDraw supports vector operations.
 
