@@ -505,7 +505,7 @@ vec.normalize()
 
 ```
 
-####Random Vector
+#### Random Vector
 
 You can create a random unit vector:
 
@@ -517,7 +517,7 @@ from EasyDraw.Vector import RandomVector
 vec = RandomVector()
 ```
 
-####Create a vector from angle
+#### Create a vector from angle
 
 You can create a vector from specific angle:
 
