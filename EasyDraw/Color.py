@@ -6,7 +6,7 @@ class Color:
         pass
 
     def hsv_to_rgb(self, HSV):
-        '''convert an integer HSV tuple (value range from 0 to 255) to a RGB tuple'''
+        # convert an integer HSV tuple (value range from 0 to 255) to a RGB tuple
         # Unpack the HSV tuple for readability
         H, S, V = HSV
         # Check if the color is Grayscale
@@ -18,7 +18,7 @@ class Color:
         # Make hue 0-5
         region = H // 43
         # Find remainder part, make it from 0-255
-        remainder = (H - (region * 43)) * 6; 
+        remainder = (H - (region * 43)) * 6
         # Calculate temp vars, doing integer multiplication
         P = (V * (255 - S)) >> 8
         Q = (V * (255 - ((S * remainder) >> 8))) >> 8
