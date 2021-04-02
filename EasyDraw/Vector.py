@@ -13,7 +13,7 @@ class Vector(object):
         if not isinstance(v, Vector):
             raise ValueError('The second parameter is not an EasyDraw vector type!')
 
-    # simple math operations -------------------------------------------------------
+    # simple math operations
     def __add__(self, v2):
         self.__check_type(v2)
         return Vector(self.x + v2.x, self.y + v2.y)
@@ -27,7 +27,7 @@ class Vector(object):
         if isinstance(v2, Vector):
             return Vector(self.x * v2.x, self.y * v2.y)
         # scalar mul
-        elif isinstance(v2, (int, float)):
+        if isinstance(v2, (int, float)):
             return Vector(self.x * v2, self.y * v2)
 
     def __rmul__(self, v2):
@@ -37,7 +37,6 @@ class Vector(object):
         if not isinstance(val, (int, float)):
             raise ValueError('The right-hand side must be int or float!')
         return Vector(self.x / val, self.y / val)
-    # ------------------------------------------------------------------------------
     
     def __neg__(self):
         return Vector(-self.x, -self.y)
@@ -72,18 +71,18 @@ class Vector(object):
         return self.length() ** 2
 
     # limit vector length to a value
-    def limit(self, max):
+    def limit(self, max_value):
         mSq = self.mag_square()
-        if (mSq > max ** 2):
-            vec = (self / math.sqrt(mSq)) * max
+        if (mSq > max_value ** 2):
+            vec = (self / math.sqrt(mSq)) * max_value
             self.x = vec.x
             self.y = vec.y
 
     # normalize this vector
     def normalize(self):
-        len = self.mag()
-        if len != 0:
-            vec = self * (1 / len)
+        l = self.mag()
+        if l != 0:
+            vec = self * (1 / l)
             self.x = vec.x
             self.y = vec.y
 
