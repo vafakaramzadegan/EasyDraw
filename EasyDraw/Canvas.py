@@ -8,8 +8,8 @@ from pyscreenshot import grab
 
 from EasyDraw import Vector
 
+# Extends functionality of tk.canvas
 class Canvas:
-    '''Extends functionality of tk.canvas'''
     def __init__(self, master, **kwargs):
         # stores pushed parameters
         self.__hist = []
@@ -49,9 +49,9 @@ class Canvas:
         
         # tkinter's default methods are available in handle
         self.handle = tk.Canvas(master,
-                                width              = self.__width,
-                                height             = self.__height,
-                                background         = kwargs.get('background', 'black'),
+                                width = self.__width,
+                                height = self.__height,
+                                background = kwargs.get('background', 'black'),
                                 highlightthickness = 0)
         self.app = kwargs.get('app', None)
         self.__showGrid = kwargs.get('showGrid', False)
@@ -69,7 +69,8 @@ class Canvas:
 
     # take a screenshot of the app window
     def __pack(self):
-        if self.handle.winfo_width() < 10: return False
+        if self.handle.winfo_width() < 10:
+            return False
 
         return grab(bbox=(self.handle.winfo_rootx(),
                           self.handle.winfo_rooty(),
@@ -79,7 +80,8 @@ class Canvas:
     # append current frame to list
     def export_frame(self):
         im = self.__pack()
-        if im: self.__frames.append(im)
+        if im:
+            self.__frames.append(im)
 
     # save frames to file
     def save_frames(self, path, interval):
@@ -119,8 +121,8 @@ class Canvas:
             if self.__parameters()['flip_x']:
                 x_old = - x_old
 
-            x_new = (x_old * cos_val - y_old * sin_val)
-            y_new = (x_old * sin_val + y_old * cos_val)
+            x_new = (x_old*cos_val - y_old*sin_val)
+            y_new = (x_old*sin_val + y_old*cos_val)
 
             if self.app.useBounds:
                 x_new *= self.app.scale_x
@@ -130,7 +132,7 @@ class Canvas:
             x_new *= self.__parameters()['zoom']
             y_new *= self.__parameters()['zoom']
 
-            new_coords.append((x_new + cx, y_new + cy))
+            new_coords.append((x_new+cx, y_new+cy))
 
         return new_coords
 
@@ -147,13 +149,12 @@ class Canvas:
 
     # flip canvas
     def flip(self, direction):
-        dir = direction.lower()
-        if any(c not in 'xy' for c in dir):
+        d = direction.lower()
+        if any(c not in 'xy' for c in d):
             raise ValueError('The parameter must be either "X" or "Y".')
-
-        if 'x' in dir:
+        if 'x' in d:
             self.__parameters()['flip_x'] = not self.__parameters()['flip_x']
-        if 'y' in dir:
+        if 'y' in d:
             self.__parameters()['flip_y'] = not self.__parameters()['flip_y']
 
     # set rotation value
@@ -190,17 +191,17 @@ class Canvas:
 
     # create circle
     def circle(self, x, y, radius, **kwargs):
-        points = self.transform_coords([[x - radius, y - radius],
-                                          [x + radius, y + radius]])
+        points = self.transform_coords([[x-radius, y-radius],
+                                        [x+radius, y+radius]])
         x1, y1 = (math.floor(points[0][0]), math.floor(points[0][1]))
         x2, y2 = (math.floor(points[1][0]), math.floor(points[1][1]))
-        cx = (x1 + x2) // 2
-        cy = (y1 + y2) // 2
+        cx = (x1+x2) // 2
+        cy = (y1+y2) // 2
 
         if self.app.useBounds:
-            size = ((radius * 2 * self.app.scale_x) + 1, (radius * 2 * self.app.scale_y) + 1)
+            size = ((radius*2*self.app.scale_x) + 1, (radius*2*self.app.scale_y) + 1)
         else:
-            size = ((radius * 2) + 1, (radius * 2) + 1)
+            size = ((radius*2) + 1, (radius*2) + 1)
 
         alpha = int(kwargs.get('alpha', 1) * 255)
         bgAlpha = alpha
@@ -223,7 +224,7 @@ class Canvas:
         self.__alpha_shapes.append(ImageTk.PhotoImage(image.rotate(-self.__parameters()['rotate_deg'], expand = True)))
             
         return self.handle.create_image(cx, cy,
-                                        image=self.__alpha_shapes[-1],
+                                        image = self.__alpha_shapes[-1],
                                         anchor = 'center')
 
     # create rectangle
@@ -303,7 +304,7 @@ class Canvas:
                                       outline = self.__parameters()['stroke_color'],
                                       width = self.__parameters()['stroke_width'])
 
-    '''create polygons---------------------------------------------------------------'''
+    # create polygons
     def begin_shape(self):
         self.__vertices.clear()
 
@@ -357,7 +358,6 @@ class Canvas:
             return self.handle.create_image(cx, cy,
                                             image = self.__alpha_shapes[-1],
                                             anchor = 'center')
-    '''------------------------------------------------------------------------------'''
 
     def font_family(self, family):
         self.__parameters()['font_family'] = family
@@ -416,7 +416,7 @@ class Canvas:
             im = source
         
         scale = kwargs.get('scale', None)
-        if scale != None:
+        if scale is not None:
             width, height = im.size
             newWidth = math.floor(width * scale)
             newheight = math.floor(height * scale)
@@ -459,7 +459,7 @@ class Canvas:
     # draw grid on screen.
     # requires boundaries to be set first
     def showGrid(self):
-        if type(self.app.bounds) is tuple:
+        if isinstance(self.app.bounds, tuple):
             self.push()
             self.stroke('#333')
             self.stroke_width(1)
