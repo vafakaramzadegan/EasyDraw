@@ -1,4 +1,4 @@
-'''
+"""
     EasyDraw
     -------------------------------
     A graphical library built for visual arts.
@@ -6,7 +6,7 @@
 
     Author: Vafa Karamzadegan
     https://github.com/vafakaramzadegan/EasyDraw
-'''
+"""
 
 import tkinter as tk
 import time
@@ -17,25 +17,27 @@ from EasyDraw.Tools import *
 from EasyDraw import Vector
 
 class EasyDraw(object):
-    '''EasyDraw main class'''
+    # EasyDraw main class
     def __init__(self, **kwargs):
         print('Hello from EasyDraw!')
         # app clock
         self.tick         = 1
         self.__start_time = time.time()
-
+        # window size
         self.width        = kwargs.get('width', 400)
         self.height       = kwargs.get('height', 400)
+        # run in fullscreen
         self.fullscreen   = kwargs.get('fullscreen', False)
+        # clear screen on each frame
         self.autoClear    = kwargs.get('autoClear', True)
-
+        # show stats on screen
         self.showStats    = kwargs.get('showStats', False)
-
-        self.interval     = kwargs.get('fps', 30)
+        # frames per second
+        self.interval     = kwargs.get('fps', 24)
         if self.interval not in range(0, 1001):
             raise ValueError("invalid fps value should be between 1 and 1000 but '%d' was entered." % self.interval)
-        self.interval  = 1000 // self.interval
-
+        self.interval     = 1000 // self.interval
+        # path to save rendered frames as GIF file
         self.export_path  = kwargs.get('exportPath', '')
         if self.export_path != '':
             print('Recording frames...')
@@ -70,7 +72,7 @@ class EasyDraw(object):
         master.bind('<B3-Motion>'      , self.__right_mouse_btn_down)
         master.bind('<ButtonRelease-1>', self.__left_mouse_btn_up)
         master.bind('<ButtonRelease-3>', self.__right_mouse_btn_up)
-        
+        # bind keyboard events
         master.bind('<Escape>', self.__on_escape_key)
         master.bind('<Key>', self.__on_key_press)
         master.bind('<KeyRelease>', self.__on_key_release)
@@ -95,8 +97,17 @@ class EasyDraw(object):
         self.color = Color.Color()
         # ------------------------------------
 
-        self.setupFunction     = kwargs.get('setupFunc', None)
-        self.drawFunction      = kwargs.get('drawFunc', None)
+        # try to load 'setup' and 'draw' callback methods automatically
+        try:
+            from __main__ import setup
+            self.setupFunction = setup
+        except ImportError:
+            self.setupFunction = kwargs.get('setupFunc', None)       
+        try:
+            from __main__ import draw
+            self.drawFunction = draw
+        except ImportError:
+            self.drawFunction = kwargs.get('drawFunc', None)
 
         self.keyPressFunc      = kwargs.get('keyPressFunc', None)
         self.keyReleaseFunc    = kwargs.get('keyReleaseFunc', None)
@@ -107,29 +118,28 @@ class EasyDraw(object):
         self.mouseDownFunction = kwargs.get('mouseDownFunc', None)
         self.mouseUpFunction   = kwargs.get('mouseUpFunc', None)
 
-        if type(self.bounds) is tuple:
+        if isinstance(self.bounds, tuple):
             min_x = self.bounds[0]
             min_y = self.bounds[1]
             max_x = self.bounds[2]
             max_y = self.bounds[3]
             if max_x <= min_x:
                 raise ValueError('Max X cannot be less than or equal to min X')
-
             if max_y <= min_y:
                 raise ValueError('Max Y cannot be less than or equal to min Y')
             self.useBounds = True
-            self.scale_x = self.width // abs(max_x - min_x)
-            self.scale_y = self.width // abs(max_y - min_y)
+            self.scale_x = self.width // abs(max_x-min_x)
+            self.scale_y = self.width // abs(max_y-min_y)
             bx = 0
             if min_x >= 0:
-                bx = -(min_x * self.scale_x)
+                bx = -(min_x*self.scale_x)
             else:
-                bx = self.width - (max_x * self.scale_x)
+                bx = self.width - (max_x*self.scale_x)
             by = 0
             if min_y >= 0:
-                by = -(min_y * self.scale_y)
+                by = -(min_y*self.scale_y)
             else:
-                by = (max_y * self.scale_y)
+                by = (max_y*self.scale_y)
             self.bound_center = (bx, by)
 
         master.after(100, self.__setup())
@@ -140,21 +150,21 @@ class EasyDraw(object):
     def clearBounds(self):
         self.useBounds = False
 
-    '''mouse related methods ---------------------------------------'''
+    # mouse related methods
     def __get_mouse_positions(self, e):
         if self.useBounds:
             self.mouse_x = e.x
             self.mouse_y = e.y
             self.mouse_x = map(self.mouse_x,
-                                          0,
-                                          self.width,
-                                          self.bounds[0],
-                                          self.bounds[2])
+                               0,
+                               self.width,
+                               self.bounds[0],
+                               self.bounds[2])
             self.mouse_y = map(self.mouse_y,
-                                          0,
-                                          self.width,
-                                          self.bounds[3],
-                                          self.bounds[1])
+                               0,
+                               self.width,
+                               self.bounds[3],
+                               self.bounds[1])
         else:
             self.mouse_x = e.x - self.canvas.get_center_pos()[0]
             self.mouse_y = e.y - self.canvas.get_center_pos()[1]
@@ -162,7 +172,6 @@ class EasyDraw(object):
         self.mouse_top = e.y
 
     def __motion_event(self, event):
-        #self.__get_mouse_positions(event)
         if self.mouseMoveFunction:
             self.mouseMoveFunction(self)
 
@@ -193,16 +202,15 @@ class EasyDraw(object):
     def __right_mouse_btn_up(self, event):
         if self.mouseUpFunction:
             self.mouseUpFunction(self, 'right')
-    '''-------------------------------------------------------------'''
+            
     def __show_stats(self):
         c = self.canvas
         c.push()
         c.translate(0, 0)
         c.font_color('white')
         c.text_anchor('nw')
-        c.font_family('12')
-
-        str = (
+        c.font_family('courier 12')
+        text = (
             f'fps:        {(self.tick / (time.time() - self.__start_time)):.2f}\n'\
             f'tick:       {self.tick}\n\n'\
 
@@ -214,7 +222,7 @@ class EasyDraw(object):
             f'mouse x:    {self.mouse_x:.2f}\n'\
             f'mouse y:    {self.mouse_y:.2f}'
         )
-        obj = c.text(24, 24, str)
+        obj = c.text(24, 24, text)
         bounds = c.handle.bbox(obj)
         c.fill('black')
         c.stroke('black')
@@ -231,7 +239,7 @@ class EasyDraw(object):
             raise TypeError('Setup function is either undefined or not callable!')
         
     def __animate(self):
-        if self.autoClear == True:
+        if self.autoClear is True:
             self.canvas.clear('all')        
             self.canvas.clear_data()
         else:
@@ -246,13 +254,10 @@ class EasyDraw(object):
             self.drawFunction(self)
         else:
             raise Exception('Draw function is either undefined or not callable!')
-
         if self.export_path != '':
             self.canvas.export_frame()
-
         if self.showStats:
-                self.__show_stats()
-
+            self.__show_stats()
         self.canvas.handle.after(self.interval, self.__animate)
 
     def __on_closing(self):
@@ -263,7 +268,7 @@ class EasyDraw(object):
         self.master.destroy()
 
     def __on_escape_key(self, e):
-        self.master.destroy()
+        self.__on_closing()
 
     def __on_key_press(self, e):
         if self.keyPressFunc:
