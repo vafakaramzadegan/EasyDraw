@@ -1,12 +1,12 @@
 # EasyDraw
-A graphical library built for visual arts. EasyDraw is built on top of tkinter and has more functionalities.
+A graphical library built for visual arts. EasyDraw is built on top of Tkinter and has more functionalities.
 
 EasyDraw is inspired by Processing.
 
 ![Rotating Polygon](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/rotating-polygon.gif)
 
-## Prequisites
-EasyDraw requires `Pillow`, `multipledispatch` and `pyscreenshot`. these packages will be automatically installed along with EasyDraw.
+## Requirements
+EasyDraw requires `Pillow`, `multipledispatch`, and `pyscreenshot`. these packages will be automatically installed along with EasyDraw.
 
 ## Installation
 EasyDraw can be installed with **pip**:
@@ -28,16 +28,14 @@ Then, you simply need to declare two functions:
 
 ```python
 def setup(app):
-    ''' write your setup codes here. 
+    ''' write your setup code here. 
         This function only executes once on app launch. '''
     
 def draw(app):
-    ''' codes written in this function are executed
-        in each frame. This allows you to 
-        create animations. '''
+    ''' The codes written in this function are executed in each frame. This will allow you to create animations. '''
 ```
 
-The name of functions and their parameters can be anything of your choice.
+The name of the functions and their parameters can be anything of your choice.
 After declaring the functions, simply create an instance of EasyDraw class:
 
 ```python
@@ -67,8 +65,8 @@ EasyDraw(
 ```
 
 ### Coordinate System
-EasyDraw provides a canvas for drawing where the top left pixel is (0, 0). The values increase as you go down to bottom right pixel.
-the origin can be changed using `translate(x, y)` command.
+EasyDraw provides a canvas for drawing where the top-left pixel is (0, 0). The values increase as you go down to the bottom right pixel.
+the origin can be changed using the `translate(x, y)` command.
 
 But, you can also define boundaries for the canvas and change the Domain and Range.
 Consider having a 400x400 px canvas, setting the `bounds` as following divides the canvas to 10 horizontal and vertical units.
@@ -85,12 +83,12 @@ EasyDraw(
 
 
 ### Callbacks
-You can also define a callbacks to get mouse/pointer information:
+You can also define callbacks to get mouse/pointer information:
 
 #### Mouse moving on canvas
 ```python
 def motion(app):
-    # position of mouse relative to top left pixel of canvas
+    # position of mouse relative to the top-left pixel of canvas
     print(app.mouse_left)
     print(app.mouse_top)
     # position of mouse relative to canvas center when translation
@@ -108,7 +106,7 @@ EasyDraw(
 #### Mouse click
 ```python
 def mouseClick(app, button):
-    # you can access mouse position from "app" parameter
+    # you can access the mouse position from "app" parameter
     # "button" parameter indicates which button was pressed
     # either of "left", "middle" or "right" is returned
     ...
@@ -123,7 +121,7 @@ EasyDraw(
 #### Mouse button down
 ```python
 def mouseButtonDown(app, button):
-    # you can access mouse position from "app" parameter
+    # you can access the mouse position from the "app" parameter.
     # "button" parameter indicates which button was pressed
     # either "left" or "right" is returned
     ...
@@ -138,8 +136,8 @@ EasyDraw(
 #### Mouse button up
 ```python
 def mouseButtonUp(app, button):
-    # you can access mouse position from "app" parameter
-    # "button" parameter indicates which button was released
+    # you can access the mouse position from "app" parameter
+    # "button" parameter indicates which button was released.
     # either "left" or "right" is returned
     ...
     
@@ -178,16 +176,16 @@ EasyDraw(
 
 ### Canvas property
 The `app.canvas` allows you to access EasyDraw methods for canvas manipulation.
-In case you want to use tkinter's default methods, use `app.canvas.handle`.
+In case you want to use Tkinter's default methods, use `app.canvas.handle`.
 
 ```python
 app.canvas.handle.create_oval(x1, y1, x2, y2, ...)
 ```
 
 #### Clearing Canvas
-You can use `clear()` method to delete objects on canvas.
-This invokes tkinter's `canvas.clear()` command directly.
-you can whether pass `'all'` as the argument to delete all objects, or pass the refrence to a specific one.
+You can use the `clear()` method to delete objects on the canvas.
+This invokes Tkinter's `canvas.clear()` command directly.
+you can whether pass `'all'` as the argument to delete all objects or pass the reference to a specific one.
 
 ```python
 app.canvas.clear('all')
@@ -224,18 +222,18 @@ app.canvas.translate(200, 200)
 ```
 
 #### Rotating Canvas
-This will rotate canvas and all elements on it:
+This will rotate canvas and all elements it contains:
 
 `app.canvas.rotate(int deg)`
 
-The following command represents a 45 degree rotation:
+The following command represents a 45-degree rotation:
 
 ```python
 app.canvas.rotate(45)
 ```
 
 #### Flipping Canvas
-You can flip canvas vertically and horizontally:
+You can flip the canvas vertically and horizontally:
 
 ```python
 # horizontal
@@ -253,7 +251,7 @@ app.canvas.zoom(2)
 ```
 
 #### Font Family and color
-You can specify font family and color as following:
+You can specify the font family and color as follows:
 
 ```python
 app.canvas.font_family('Tahoma 20 italic bold')
@@ -270,14 +268,14 @@ Use `text` method to write text on canvas:
 app.canvas.text(100, 100, 'Hello World!')
 ```
 
-All text objects on the canvas have an `anchor` property which defines their alignment:
+All text objects on the canvas have an `anchor` property that defines their alignment:
 ```python
 # nw, n, ne, center, w, e, sw, s, se
 app.canvas.text_anchor('nw')
 ```
 
 #### Draw image on canvas
-You can load an image from file and draw it on canvas:
+You can load an image from the file and draw it on canvas:
 ```python
 # using absolute position
 app.canvas.create_image(int x, int y, path_to_file)
@@ -295,7 +293,7 @@ app.canvas.create_image(0, 0, 'c:\my_img.png', scale = 0.5)
 '''
 
 #### Fill and Stroke colors
-You can specify fill and stroke colors for shapes including: polygons, rectangles and circles.
+You can specify fill and stroke colors for shapes including polygons, rectangles, and circles.
 This can be done using:
 
 ```python
@@ -303,13 +301,13 @@ app.canvas.fill(COLOR)
 app.canvas.stroke(COLOR)
 ```
 
-Colors can be defined in three ways. information on colors is available furthur down the page.
+Colors are defined in three ways. more information on colors is available further down the page.
 
 #### Stroke Width
-The with/thickness of strokes can be altered as following:
+The with/thickness of strokes can be altered as follows:
 
 ```python
-app.canvas.stroke_width(int val)
+app.canvas.stroke_width(int value)
 ```
 
 For example, this command sets the width to 2 pixels:
@@ -326,7 +324,7 @@ You can create a circle:
 app.canvas.circle(int x, int y, int radius)
 ```
 
-This creates a circle with radius of 100 pixels on origin of canvas:
+This creates a circle with a radius of 100 pixels on the origin of canvas:
 
 ```python
 app.canvas.circle(0, 0, 100)
@@ -379,7 +377,7 @@ app.canvas.triangle(0, -20, 20, 20, -20, 20)
 ```
 
 ##### Arc
-Draw arc on canvas using following command:
+Draw arc on canvas using the following command:
 
 ```python
 app.canvas.arc(int x1, int y1, int x2, int y2, int start, int extend)
@@ -391,18 +389,18 @@ app.canvas.arc(-30, 30, 30, -30, 0, 180)
 The outline color can be set with `app.canvas.stroke()` command. also the outline width can be set with `app.canvas.stroke_width()`.
 
 ##### Line
-For creating lines, simply use:
+To create lines, simply use:
 
 ```python
 app.canvas.line(int x1, int y1, int x2, int y2)
 
-# draw line between two coordinates
+# draw line between the two coordinates
 app.canvas.line(int x1, int y1, int x2, int y2)
 
-# draw line between two vectors
+# draw line between the two vectors
 app.canvas.line(vector v1, vector v2)
 
-# draw a line from origin to a vector
+# draw a line from the origin to a vector
 app.canvas.line(vector v)
 ```
 
@@ -520,14 +518,14 @@ You can create a random unit vector:
 ```python
 from EasyDraw.Vector import RandomVector
 
-# a random unit vector with the length equals to 1
+# a random unit vector with the length equals 1
 # all vector operations can be used on a RandomVector
 vec = RandomVector()
 ```
 
-#### Create a vector from angle
+#### Create a vector from an angle
 
-You can create a vector from specific angle:
+You can create a vector from a specific angle:
 
 ```python
 from EasyDraw.Vector import VectorFromAngle
@@ -535,7 +533,7 @@ from EasyDraw.Vector import VectorFromAngle
 # creates a 45-degree vector with its length equal to 1
 vec = VectorFromAngle(45)
 
-# you can set the length of the vector
+# you can set the length of a vector.
 # this creates a 90-degree vector with a length of 10
 vec = VectorFromAngle(90, 10)
 ```
