@@ -100,29 +100,29 @@ class Canvas:
     # transform coordinates based on origin and rotation value
     def transform_coords(self, coords, offset=None):
         if offset is not None:
-            cx = offset[0]
-            cy = offset[1]
+            cx, cy = offset
         else:
-            cx = self.__parameters()['center_x']
-            cy = self.__parameters()['center_y']
+            cx, cy = self.__parameters()['center_x'], self.__parameters()['center_y']
 
         if self.app.useBounds:
             cx = self.app.bound_center[0] + (cx * self.app.scale_x)
             cy = self.app.bound_center[1] + (cy * self.app.scale_y)
 
         angle = math.radians(self.__parameters()['rotate_deg'])
-        cos_val = math.cos(angle)
-        sin_val = math.sin(angle)
+        cos_val, sin_val = math.cos(angle), math.sin(angle)
+
+        flip_y, flip_x = self.__parameters()['flip_y'], self.__parameters()['flip_x']
+
         new_coords = []
         for x_old, y_old in coords:
             # check if canvas is flipped
-            if self.__parameters()['flip_y']:
-                y_old = - y_old
-            if self.__parameters()['flip_x']:
-                x_old = - x_old
+            if flip_y:
+                y_old = -y_old
+            if flip_x:
+                x_old = -x_old
 
-            x_new = (x_old*cos_val - y_old*sin_val)
-            y_new = (x_old*sin_val + y_old*cos_val)
+            x_new = (x_old * cos_val - y_old * sin_val)
+            y_new = (x_old * sin_val + y_old * cos_val)
 
             if self.app.useBounds:
                 x_new *= self.app.scale_x
@@ -132,7 +132,7 @@ class Canvas:
             x_new *= self.__parameters()['zoom']
             y_new *= self.__parameters()['zoom']
 
-            new_coords.append((x_new+cx, y_new+cy))
+            new_coords.append((x_new + cx, y_new + cy))
 
         return new_coords
 
@@ -191,74 +191,77 @@ class Canvas:
 
     # create circle
     def circle(self, x, y, radius, **kwargs):
-        points = self.transform_coords([[x-radius, y-radius],
-                                        [x+radius, y+radius]])
-        x1, y1 = (math.floor(points[0][0]), math.floor(points[0][1]))
-        x2, y2 = (math.floor(points[1][0]), math.floor(points[1][1]))
-        cx = (x1+x2) // 2
-        cy = (y1+y2) // 2
+        points = self.transform_coords([[x - radius, y - radius], [x + radius, y + radius]])
 
-        if self.app.useBounds:
-            size = ((radius*2*self.app.scale_x) + 1, (radius*2*self.app.scale_y) + 1)
-        else:
-            size = ((radius*2) + 1, (radius*2) + 1)
+        cx, cy = map(lambda p: math.floor(sum(p) / 2), zip(*map(lambda p: (p[0], p[1]), points)))
+
+        size_multiplier = self.app.scale_x if self.app.useBounds else 1
+        size = ((radius * 2 * size_multiplier) + 1, (radius * 2 * size_multiplier) + 1)
 
         alpha = int(kwargs.get('alpha', 1) * 255)
         bgAlpha = alpha
 
-        if (self.__parameters()['fill_color'] == ''):
-            self.__parameters()['fill_color'] = '#000'
+        fill_color = kwargs.get('fill_color', self.__parameters()['fill_color'])
+        if fill_color == '':
+            fill_color = '#000'
             bgAlpha = 0
 
-        fill = ImageColor.getrgb(self.__parameters()['fill_color']) + (bgAlpha,)
+        fill = ImageColor.getrgb(fill_color) + (bgAlpha,)
 
         if self.__parameters()['stroke_disabled']:
-            self.__parameters()['stroke_color'] = self.__parameters()['fill_color']
+            stroke_color = fill_color
+        else:
+            stroke_color = self.__parameters()['stroke_color']
 
-        stroke = ImageColor.getrgb(self.__parameters()['stroke_color']) + (alpha,)
+        stroke = ImageColor.getrgb(stroke_color) + (alpha,)
         image = Image.new('RGBA', size)
 
         draw = ImageDraw.Draw(image)
-        draw.ellipse((0, 0, size), fill = fill, outline = stroke, width = self.__parameters()['stroke_width'])
+        draw.ellipse((0, 0, size[0], size[1]), fill=fill, outline=stroke, width=self.__parameters()['stroke_width'])
 
-        self.__alpha_shapes.append(ImageTk.PhotoImage(image.rotate(-self.__parameters()['rotate_deg'], expand = True)))
-            
+        rotated_image = image.rotate(-self.__parameters()['rotate_deg'], expand=True)
+        self.__alpha_shapes.append(ImageTk.PhotoImage(rotated_image))
+
         return self.handle.create_image(cx, cy,
-                                        image = self.__alpha_shapes[-1],
-                                        anchor = 'center')
+                                        image=self.__alpha_shapes[-1],
+                                        anchor='center')
 
     # create rectangle
     def rect(self, x1, y1, x2, y2, **kwargs):
         points = self.transform_coords([[x1, y1], [x2, y2]])
-        dx = (x2 - x1)
-        dy = (y2 - y1)
-      
+        dx, dy = (x2 - x1), (y2 - y1)
+
         if self.app.useBounds:
             dx *= self.app.scale_x
             dy *= self.app.scale_y
 
-        cx = (points[0][0] + points[1][0]) // 2
-        cy = (points[0][1] + points[1][1]) // 2
+        cx, cy = map(lambda p: math.floor(sum(p) / 2), zip(*map(lambda p: (p[0], p[1]), points)))
 
         alpha = int(kwargs.get('alpha', 1) * 255)
         bgAlpha = alpha
 
-        if (self.__parameters()['fill_color'] == ''):
-            self.__parameters()['fill_color'] = '#000'
+        fill_color = kwargs.get('fill_color', self.__parameters()['fill_color'])
+        if fill_color == '':
+            fill_color = '#000'
             bgAlpha = 0
 
         if self.__parameters()['stroke_disabled']:
-            self.__parameters()['stroke_color'] = self.__parameters()['fill_color']
+            stroke_color = fill_color
+        else:
+            stroke_color = self.__parameters()['stroke_color']
 
-        fill = ImageColor.getrgb(self.__parameters()['fill_color']) + (bgAlpha,)
-        stroke = ImageColor.getrgb(self.__parameters()['stroke_color']) + (alpha,)
+        fill = ImageColor.getrgb(fill_color) + (bgAlpha,)
+        stroke = ImageColor.getrgb(stroke_color) + (alpha,)
         image = Image.new('RGBA', (math.floor(dx), math.floor(dy)))
         draw = ImageDraw.Draw(image)
-        draw.rectangle((0, 0, dx, dy), fill = fill, outline = stroke, width = self.__parameters()['stroke_width'])
-        self.__alpha_shapes.append(ImageTk.PhotoImage(image.rotate(-self.__parameters()['rotate_deg'], expand = True)))
+        draw.rectangle((0, 0, dx, dy), fill=fill, outline=stroke, width=self.__parameters()['stroke_width'])
+        rotated_image = image.rotate(-self.__parameters()['rotate_deg'], expand=True)
+        self.__alpha_shapes.append(ImageTk.PhotoImage(rotated_image))
+
         return self.handle.create_image(cx, cy,
-                                        image = self.__alpha_shapes[-1],
-                                        anchor = 'center')
+                                        image=self.__alpha_shapes[-1],
+                                        anchor='center')
+
 
     # create line
     # this method accepts two types of .
@@ -420,7 +423,7 @@ class Canvas:
             width, height = im.size
             newWidth = math.floor(width * scale)
             newheight = math.floor(height * scale)
-            im = im.resize((newWidth, newheight), Image.ANTIALIAS)
+            im = im.resize((newWidth, newheight))
 
         self.__alpha_shapes.append(ImageTk.PhotoImage(im.rotate(-self.__parameters()['rotate_deg'], expand = True)))
         return self.handle.create_image(self.transform_coords([[x, y]]),
@@ -434,11 +437,11 @@ class Canvas:
     def check_overlap(self, items):
         bounds = self.handle.bbox(items[0])
         overlapping = self.handle.find_overlapping(bounds[0], bounds[1], bounds[2], bounds[3])
-        return set(items).issubset(set(overlapping))
+        return all(item in overlapping for item in items)
 
     # return the latest parameters
     def __parameters(self):
-        return self.__hist[len(self.__hist) - 1]
+        return self.__hist[-1]
 
     def send_to_back(self, item):
         self.handle.tag_lower(item)
@@ -453,8 +456,8 @@ class Canvas:
     # pop last parameters
     def pop(self):
         if len(self.__hist) == 1:
-            raise Exception('Cannot go back any furthur. List is empty!')
-        self.__hist.pop(len(self.__hist) - 1)
+            raise Exception('Cannot go back any further. List is empty!')
+        self.__hist.pop()
 
     # draw grid on screen.
     # requires boundaries to be set first
@@ -465,12 +468,12 @@ class Canvas:
             self.stroke_width(1)
             self.handle.create_rectangle(0, 0,
                                          self.__width, self.__height,
-                                         fill = self.app.bg_color,
-                                         outline = self.app.bg_color)
-            
+                                         fill=self.app.bg_color,
+                                         outline=self.app.bg_color)
+
             for i in range(self.app.bounds[0], self.app.bounds[2] + 1):
                 self.line(i, self.app.bounds[1], i, self.app.bounds[3])
-                
+
             for i in range(self.app.bounds[1], self.app.bounds[3] + 1):
                 self.line(self.app.bounds[0], i, self.app.bounds[2], i)
 
