@@ -1,191 +1,161 @@
-# EasyDraw
-A graphical library built for visual arts. EasyDraw is built on top of Tkinter and has more functionalities.
+# EasyDraw - Professional Documentation
 
-EasyDraw is inspired by Processing.
+Welcome to EasyDraw, an advanced graphical library designed for visual arts. Built on top of Tkinter, EasyDraw offers enhanced functionalities, making it an excellent choice for artists and developers alike.
 
 ![Rotating Polygon](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/rotating-polygon.gif)
 
+- [EasyDraw - Professional Documentation](#easydraw---professional-documentation)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Getting Started](#getting-started)
+  - [Coordinate System](#coordinate-system)
+  - [Callbacks](#callbacks)
+    - [Mouse Moving on Canvas](#mouse-moving-on-canvas)
+    - [Mouse Click](#mouse-click)
+    - [KeyPress and KeyRelease Events](#keypress-and-keyrelease-events)
+  - [Canvas Properties](#canvas-properties)
+    - [Clearing Canvas](#clearing-canvas)
+    - [Push and Pop Methods](#push-and-pop-methods)
+    - [Transforming Coordinates](#transforming-coordinates)
+    - [Rotating Canvas](#rotating-canvas)
+    - [Flipping Canvas](#flipping-canvas)
+    - [Zoom](#zoom)
+    - [Font Family and Color](#font-family-and-color)
+    - [Writing Text on Canvas](#writing-text-on-canvas)
+    - [Drawing Image on Canvas](#drawing-image-on-canvas)
+    - [Fill and Stroke Colors](#fill-and-stroke-colors)
+    - [Stroke Width](#stroke-width)
+    - [Creating Shapes and Lines](#creating-shapes-and-lines)
+      - [Circle](#circle)
+      - [Rectangle](#rectangle)
+      - [Polygon](#polygon)
+      - [Triangle](#triangle)
+      - [Arc](#arc)
+      - [Line](#line)
+        - [Getting the Value of a Pixel](#getting-the-value-of-a-pixel)
+    - [Colors](#colors)
+    - [Vectors - Simplifying Geometry Operations](#vectors---simplifying-geometry-operations)
+      - [Random Vector](#random-vector)
+      - [Create a Vector from an Angle](#create-a-vector-from-an-angle)
+
+
 ## Requirements
-EasyDraw requires `Pillow`, `multipledispatch`, and `pyscreenshot`. these packages will be automatically installed along with EasyDraw.
+To utilize EasyDraw, ensure that you have the required dependencies installed. EasyDraw automatically installs the necessary packages: `Pillow`, `multipledispatch`, and `pyscreenshot`.
 
 ## Installation
-EasyDraw can be installed with **pip**:
+Get started with EasyDraw effortlessly using the following **pip** command:
 
-`$ python3 -m pip install --upgrade EasyDraw`
+```bash
+$ python3 -m pip install --upgrade EasyDraw
+```
 
-If you already have previous versions installed, running the above command automatically upgrades EasyDraw.
+If you have a previous version installed, running this command will seamlessly upgrade EasyDraw.
 
-## Using EasyDraw
-EasyDraw helps you visualize your ideas easily on a 2D Canvas.
-
-First, import the library:
+## Getting Started
+EasyDraw simplifies the process of visualizing your ideas on a 2D canvas. Begin by importing the library:
 
 ```python
 from EasyDraw import EasyDraw
 ```
 
-Then, you simply need to declare two functions:
+Declare two functions, `setup` and `draw`, to initialize and handle animations, respectively.
 
 ```python
 def setup(app):
-    ''' write your setup code here. 
-        This function only executes once on app launch. '''
+    ''' Write your setup code here.
+        This function executes once on app launch. '''
     
 def draw(app):
-    ''' The codes written in this function are executed in each frame. This will allow you to create animations. '''
+    ''' Codes written here execute in each frame, allowing you to create animations. '''
 ```
 
-The name of the functions and their parameters can be anything of your choice.
-After declaring the functions, simply create an instance of EasyDraw class:
+Create an instance of the EasyDraw class:
 
 ```python
 EasyDraw(
-        # width of the window/canvas
-        width = 800,
-        # height of the window/canvas
-        height = 800,
-        # frames per second (1 - 1000)
-        fps = 30,
-        # background color
-        background = 'black',
-        # export all frames to a GIF file when app terminates
-        exportPath = '/path/to/your/file.gif',
-        # your app title
-        title = 'App Title',
-        # clear canvas after each frame
-        autoClear = True,
-        # switch to fullscreen view
-        fullscreen = True,
-        # show runtime information on screen
-        showStats = True,
-        # pass setup function callback
-        setupFunc = setup,
-        # pass draw function callback
-        drawFunc = draw)
+    width=800,
+    height=800,
+    fps=30,
+    background='black',
+    exportPath='/path/to/your/file.gif',
+    title='App Title',
+    autoClear=True,
+    fullscreen=True,
+    showStats=True,
+    setupFunc=setup,
+    drawFunc=draw
+)
 ```
 
-### Coordinate System
-EasyDraw provides a canvas for drawing where the top-left pixel is (0, 0). The values increase as you go down to the bottom right pixel.
-the origin can be changed using the `translate(x, y)` command.
+## Coordinate System
+EasyDraw provides a canvas where the top-left pixel is (0, 0), and values increase going down to the bottom right. Customize the origin using the `translate(x, y)` command. Alternatively, define boundaries and change the Domain and Range:
 
-But, you can also define boundaries for the canvas and change the Domain and Range.
-Consider having a 400x400 px canvas, setting the `bounds` as following divides the canvas to 10 horizontal and vertical units.
 ```python
 EasyDraw(
-        ...
-        # (min x, min y, max y, max y)
-        bounds = (-5, -5, 5, 5)
-        # whether to show the Grid or not
-        showGrid = True
-        ...
-        )
+    ...
+    bounds=(-5, -5, 5, 5),
+    showGrid=True
+    ...
+)
 ```
 
+## Callbacks
+Define callbacks to capture mouse and keyboard events:
 
-### Callbacks
-You can also define callbacks to get mouse/pointer information:
-
-#### Mouse moving on canvas
+### Mouse Moving on Canvas
 ```python
 def motion(app):
-    # position of mouse relative to the top-left pixel of canvas
-    print(app.mouse_left)
-    print(app.mouse_top)
-    # position of mouse relative to canvas center when translation
-    # is applied
-    print(app.mouse_x)
-    print(app.mouse_y)
-    
+    # Mouse position relative to the top-left pixel of the canvas
+    print(app.mouse_left, app.mouse_top)
+    # Mouse position relative to the canvas center when translation is applied
+    print(app.mouse_x, app.mouse_y)
+
 EasyDraw(
-        ...
-        mouseMoveFunc = motion
-        ...
-        )
+    ...
+    mouseMoveFunc=motion
+    ...
+)
 ```
 
-#### Mouse click
+### Mouse Click
 ```python
 def mouseClick(app, button):
-    # you can access the mouse position from "app" parameter
-    # "button" parameter indicates which button was pressed
-    # either of "left", "middle" or "right" is returned
+    # Access mouse position from "app" parameter
+    # "button" parameter indicates which button was pressed: "left", "middle", or "right"
     ...
-    
-EasyDraw(
-        ...
-        clickFunc = mouseClick
-        ...
-        )
-```
 
-#### Mouse button down
-```python
-def mouseButtonDown(app, button):
-    # you can access the mouse position from the "app" parameter.
-    # "button" parameter indicates which button was pressed
-    # either "left" or "right" is returned
+EasyDraw(
     ...
-    
-EasyDraw(
-        ...
-        mouseDownFunc = mouseButtonDown
-        ...
-        )
-```
-
-#### Mouse button up
-```python
-def mouseButtonUp(app, button):
-    # you can access the mouse position from "app" parameter
-    # "button" parameter indicates which button was released.
-    # either "left" or "right" is returned
+    clickFunc=mouseClick
     ...
-    
-EasyDraw(
-        ...
-        mouseUpFunc = mouseButtonUp
-        ...
-        )
+)
 ```
 
-#### KeyPress Event
+### KeyPress and KeyRelease Events
 ```python
-    def keyPress(app, e):
-        print(e)
-        ...
-        
+def keyPress(app, e):
+    # Access key information from the "e" parameter
+    print(e)
+    ...
+
+def keyRelease(app, e):
+    # Access key information from the "e" parameter
+    print(e)
+    ...
+
 EasyDraw(
-        ...
-        keyPressFunc = keyPress
-        ...
-        )
+    ...
+    keyPressFunc=keyPress,
+    keyReleaseFunc=keyRelease
+    ...
+)
 ```
 
-#### keyRelease Event
-```python
-    def keyRelease(app, e):
-        print(e)
-        ...
-        
-EasyDraw(
-        ...
-        keyReleaseFunc = keyPress
-        ...
-        )
-```
+## Canvas Properties
+Manipulate the canvas using the `app.canvas` object. For Tkinter's default methods, use `app.canvas.handle`.
 
-### Canvas property
-The `app.canvas` allows you to access EasyDraw methods for canvas manipulation.
-In case you want to use Tkinter's default methods, use `app.canvas.handle`.
-
-```python
-app.canvas.handle.create_oval(x1, y1, x2, y2, ...)
-```
-
-#### Clearing Canvas
-You can use the `clear()` method to delete objects on the canvas.
-This invokes Tkinter's `canvas.clear()` command directly.
-you can whether pass `'all'` as the argument to delete all objects or pass the reference to a specific one.
+### Clearing Canvas
+Use the `clear()` method to delete objects on the canvas. Pass `'all'` as an argument to delete all objects or a specific reference.
 
 ```python
 app.canvas.clear('all')
@@ -194,8 +164,8 @@ circle = app.canvas.circle(0, 0, 100)
 app.canvas.clear(circle)
 ```
 
-#### Push and Pop Methods
-The `push()` function saves current styles and transformations, while `pop()` restores them,
+### Push and Pop Methods
+`push()` saves current styles and transformations, while `pop()` restores them.
 
 ```python
 def draw(app):
@@ -210,151 +180,107 @@ def draw(app):
     c.pop()
 ```
 
-#### Translating Coordinates
-You can use this method to simply move the origin (0, 0) to a custom position:
-
-`app.canvas.translate(int new_x, int new_y)`
-
-the following command moves the origin to pixel 200, 200:
+### Transforming Coordinates
+Move the origin using `app.canvas.translate(new_x, new_y)`.
 
 ```python
 app.canvas.translate(200, 200)
 ```
 
-#### Rotating Canvas
-This will rotate canvas and all elements it contains:
-
-`app.canvas.rotate(int deg)`
-
-The following command represents a 45-degree rotation:
+### Rotating Canvas
+Rotate the canvas and all its elements.
 
 ```python
 app.canvas.rotate(45)
 ```
 
-#### Flipping Canvas
-You can flip the canvas vertically and horizontally:
+### Flipping Canvas
+Flip the canvas vertically, horizontally, or both.
 
 ```python
-# horizontal
+# Horizontal
 app.canvas.flip('x')
-# vertical
+# Vertical
 app.canvas.flip('y')
-# both
+# Both
 app.canvas.flip('xy')
 ```
-#### Zoom
-You can apply a zoom value to scale all the elements of the canvas:
+
+### Zoom
+Apply a zoom value to scale all canvas elements.
+
 ```python
-# 2x magnification
 app.canvas.zoom(2)
 ```
 
-#### Font Family and color
-You can specify the font family and color as follows:
+### Font Family and Color
+Specify the font family and color.
 
 ```python
 app.canvas.font_family('Tahoma 20 italic bold')
 app.canvas.font_color('white')
 app.canvas.font_color('#000000')
 app.canvas.font_color(app.color.rgb(255, 0, 0))
-app.canvas.font_color(app.color.hsv(100, 200, 255)
+app.canvas.font_color(app.color.hsv(100, 200, 255))
 ```
 
-#### Writing text on Canvas
-Use `text` method to write text on canvas:
+### Writing Text on Canvas
+Use the `text` method to write text on the canvas.
 
 ```python
 app.canvas.text(100, 100, 'Hello World!')
 ```
 
-All text objects on the canvas have an `anchor` property that defines their alignment:
-```python
-# nw, n, ne, center, w, e, sw, s, se
-app.canvas.text_anchor('nw')
-```
+### Drawing Image on Canvas
+Load and draw an image on the canvas.
 
-#### Draw image on canvas
-You can load an image from the file and draw it on canvas:
 ```python
-# using absolute position
+# Absolute position
 app.canvas.create_image(int x, int y, path_to_file)
 
-# using vector
+# Using vector
 app.canvas.create_image(Vector v, path_to_file)
 
 v = Vector(100, 100)
 app.canvas.create_image(v, "/path/to/an/image.jpeg")
 ```
-You can also change the scale:
+
+Change the scale if needed:
 
 ```python
-app.canvas.create_image(0, 0, 'c:\my_img.png', scale = 0.5)
-'''
+app.canvas.create_image(0, 0, 'c:\my_img.png', scale=0.5)
+```
 
-#### Fill and Stroke colors
-You can specify fill and stroke colors for shapes including polygons, rectangles, and circles.
-This can be done using:
+### Fill and Stroke Colors
+Specify fill and stroke colors for shapes.
 
 ```python
 app.canvas.fill(COLOR)
 app.canvas.stroke(COLOR)
 ```
 
-Colors are defined in three ways. more information on colors is available further down the page.
+### Stroke Width
+Alter the width/thickness of strokes.
 
-#### Stroke Width
-The with/thickness of strokes can be altered as follows:
-
-```python
-app.canvas.stroke_width(int value)
-```
-
-For example, this command sets the width to 2 pixels:
 ```python
 app.canvas.stroke_width(2)
 ```
 
-#### Creating Shapes and Lines
-You can create a circle:
+### Creating Shapes and Lines
+Create various shapes using EasyDraw's intuitive methods:
 
-##### Circle
-
-```python
-app.canvas.circle(int x, int y, int radius)
-```
-
-This creates a circle with a radius of 100 pixels on the origin of canvas:
-
+#### Circle
 ```python
 app.canvas.circle(0, 0, 100)
 ```
 
-##### Rectangle
-
-```python
-app.canvas.rect(int x1, int y1, int x2, int y2)
-```
-
-Creating a rectangle from 0, 0 to 100, 100:
-
+#### Rectangle
 ```python
 app.canvas.rect(0, 0, 100, 100)
 ```
 
-##### Polygon
-
-You can create custom shapes by defining vertices.
-
-```python
-app.canvas.begin_shape()
-...
-app.canvas.vertex(int x, int y)
-...
-app.canvas.end_shape()
-```
-
-This creates a rectangle:
+#### Polygon
+Create custom shapes by defining vertices.
 
 ```python
 c = app.canvas
@@ -367,89 +293,83 @@ c.vertex(0, 100)
 c.end_shape()
 ```
 
-##### Triangle
-You can draw a triangle by defining the vertices:
+#### Triangle
+Draw a triangle by defining the vertices.
 
 ```python
-app.canvas.triangle(int x1, int y1, int x2, int y2, int x3, int y3)
-
 app.canvas.triangle(0, -20, 20, 20, -20, 20)
 ```
 
-##### Arc
-Draw arc on canvas using the following command:
+#### Arc
+Draw an arc on the canvas.
 
 ```python
-app.canvas.arc(int x1, int y1, int x2, int y2, int start, int extend)
-
-app.canvas.translate(100, 100)
 app.canvas.arc(-30, 30, 30, -30, 0, 180)
 ```
 
-The outline color can be set with `app.canvas.stroke()` command. also the outline width can be set with `app.canvas.stroke_width()`.
-
-##### Line
-To create lines, simply use:
+#### Line
+Create lines using coordinates or vectors.
 
 ```python
-app.canvas.line(int x1, int y1, int x2, int y2)
+# Between two coordinates
+app.canvas.line(0, 0, 100, 100)
 
-# draw line between the two coordinates
-app.canvas.line(int x1, int y1, int x2, int y2)
+# Between two vectors
+app.canvas.line(Vector(0, 0), Vector(100, 100))
 
-# draw line between the two vectors
-app.canvas.line(vector v1, vector v2)
+# From the origin to a vector
+app.canvas.line
 
-# draw a line from the origin to a vector
-app.canvas.line(vector v)
-```
+#### Pixels and Color Manipulation
 
-#### Pixels
-EasyDraw provides methods for manipulating pixels of the canvas.
+EasyDraw provides powerful methods for manipulating pixels on the canvas and supports various color representation formats.
 
 ##### Setting a Pixel
-you can set a pixel value using:
+Set a pixel value using the following:
 
 ```python
 app.canvas.point(int x, int y, color)
 
-# absolute position
+# Absolute position
 app.canvas.point(20, 40, 'red')
 
-# vector position
+# Vector position
 v = Vector(100, 200)
 app.canvas.point(v, RGB(0, 255, 0))
 ```
 
-#### Getting the value of a Pixel
-You can get the RGB value of a pixel using:
+##### Getting the Value of a Pixel
+Retrieve the RGB value of a pixel with:
 
 ```python
 app.canvas.get_pixel(int x, int y)
 ```
 
-The returning value is a tuple of RGB values: `(Red, Green, Blue)`
+The returned value is a tuple of RGB values: `(Red, Green, Blue)`.
 
 ### Colors
-In addition to HEX values and the locally defined standard color names, EasyDraw provides methods for defining RGB and HSV colors:
+EasyDraw provides multiple methods for defining colors, including RGB, HSV, and random colors.
 
 ```python
 from EasyDraw.Color import RGB, HSV, RandomColor
 
+# Fill with RGB color
 app.canvas.fill(RGB(255, 0, 0))
 app.canvas.circle(0, 0, 100)
 
+# Fill with HSV color
 app.canvas.fill(HSV(150, 200, 255))
 app.canvas.rect(0, 0, 100, 100)
 
+# Fill with a random color
 app.canvas.fill(RandomColor())
 app.canvas.rect(100, 100, 200, 200)
 ```
 
-### Vectors
+### Vectors - Simplifying Geometry Operations
 ![Vector car](https://raw.githubusercontent.com/vafakaramzadegan/EasyDraw/master/images/vector_car.gif)
 
-EasyDraw supports vector operations.
+EasyDraw supports vector operations, simplifying geometric calculations.
 
 ```python
 from EasyDraw.Vector import Vector
@@ -458,82 +378,84 @@ v1 = Vector(0, 0)
 v2 = Vector(200, 0)
 v3 = Vector(-100, -100)
 
+# Vector addition
 print(v1 + v2)
+# Vector subtraction
 print(v1 - v2)
+# Dot product
 print(v1 * v2)
+# Negation
 print(-v1)
+# Accessing vector components
 print(v1.x, v1.y)
 ```
 
-You can also get other useful information on vectors:
+Retrieve useful information about vectors:
 
 ```python
 v1 = Vector(200, 0)
 v2 = Vector(0, -200)
 
-# vector length
+# Vector length
 print(v1.length())
 # or
 print(v1.mag())
 
-# suqared vector magnitude
+# Squared vector magnitude
 print(v1.mag_square())
 
-# angle between v1 & v2
+# Angle between v1 and v2
 print(v1.angle_between(v2))
 
-# distance between v1 & v2
+# Distance between v1 and v2
 print(v1.distance_from(v2))
 
-# heading angle of v1
+# Heading angle of v1
 print(v1.heading)
 
-# get linear interpolation between two vectors
+# Linear interpolation between two vectors
 v1.lerp(v2, 0.5)
 ```
 
-And, for vector manipulation:
+Vector manipulation is also possible:
 
 ```python
 vec = Vector(200, 0)
 
-# get a copy of a vector
+# Get a copy of a vector
 vec2 = vec1.copy()
 
-# set vector magnitude
+# Set vector magnitude
 vec.set_mag(0.5)
 
-# limit vector length to a value
+# Limit vector length to a value
 vec.limit(20)
 
-# normalize a vector
+# Normalize a vector
 vec.normalize()
-
 ```
 
 #### Random Vector
-
-You can create a random unit vector:
+Generate a random unit vector:
 
 ```python
 from EasyDraw.Vector import RandomVector
 
-# a random unit vector with the length equals 1
-# all vector operations can be used on a RandomVector
+# A random unit vector with a length of 1
+# All vector operations can be applied to a RandomVector
 vec = RandomVector()
 ```
 
-#### Create a vector from an angle
-
-You can create a vector from a specific angle:
+#### Create a Vector from an Angle
+Create a vector from a specific angle:
 
 ```python
 from EasyDraw.Vector import VectorFromAngle
 
-# creates a 45-degree vector with its length equal to 1
+# Creates a 45-degree vector with a length of 1
 vec = VectorFromAngle(45)
 
-# you can set the length of a vector.
-# this creates a 90-degree vector with a length of 10
+# Set the length of a vector
+# Creates a 90-degree vector with a length of 10
 vec = VectorFromAngle(90, 10)
 ```
