@@ -115,7 +115,7 @@ class RandomVector:
 
 # Create a vector from an angle
 class VectorFromAngle:
-    def __new__(self, cls, angle, length=1):
+    def __new__(self, angle, length=1):
         x = length * math.cos(math.radians(angle))
         y = length * math.sin(math.radians(angle))
         return Vector(x, y)
